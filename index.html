@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immersive 3D Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+        .section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 0 20px;
+        }
+        .content {
+            text-align: center;
+            z-index: 1;
+            max-width: 800px;
+        }
+        h1, h2 {
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            h2 {
+                font-size: 2rem;
+            }
+            p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="section" id="hero">
+        <div class="content">
+            <h1>Welcome to the Future</h1>
+            <p>Experience immersive 3D animations that react to your scroll. Dive into a world of realism and motion.</p>
+        </div>
+    </div>
+    <div class="section" id="section1">
+        <div class="content">
+            <h2>Metallic Sphere</h2>
+            <p>As you scroll, the sphere transforms, revealing its metallic sheen and dynamic shadows.</p>
+        </div>
+    </div>
+    <div class="section" id="section2">
+        <div class="content">
+            <h2>Glass Cube</h2>
+            <p>Watch the cube refract light and rotate in harmony with your movement.</p>
+        </div>
+    </div>
+    <div class="section" id="section3">
+        <div class="content">
+            <h2>Abstract Torus</h2>
+            <p>The torus evolves, blending materials and lights for a cinematic experience.</p>
+        </div>
+    </div>
+
+    <!-- CDN Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+
+    <script>
+        // Mobile detection for fallback
+        const isMobile = window.innerWidth < 768;
+
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: !isMobile });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 5, 5);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        scene.add(directionalLight);
+
+        // Materials
+        const metallicMaterial = new THREE.MeshStandardMaterial({
+            color: 0xcccccc,
+            metalness: 0.9,
+            roughness: 0.1
+        });
+
+        const glassMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            metalness: 0,
+            roughness: 0.1,
+            transmission: 0.9,
+            thickness: 0.5,
+            ior: 1.5
+        });
+
+        const torusMaterial = new THREE.MeshStandardMaterial({
+            color: 0x00ff88,
+            metalness: 0.5,
+            roughness: 0.3
+        });
+
+        // Objects
+        const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+        const sphere = new THREE.Mesh(sphereGeometry, metallicMaterial);
+        sphere.position.set(-3, 0, 0);
+        sphere.castShadow = true;
+        scene.add(sphere);
+
+        const cubeGeometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+        const cube = new THREE.Mesh(cubeGeometry, glassMaterial);
+        cube.position.set(3, 0, 0);
+        cube.castShadow = true;
+        scene.add(cube);
+
+        const torusGeometry = new THREE.TorusGeometry(1, 0.4, 16, 100);
+        const torus = new THREE.Mesh(torusGeometry, torusMaterial);
+        torus.position.set(0, -2, 0);
+        torus.castShadow = true;
+        scene.add(torus);
+
+        camera.position.z = 5;
+
+        // GSAP ScrollTrigger animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Sphere animation
+        ScrollTrigger.create({
+            trigger: "#section1",
+            start: "top center",
+            end: "bottom center",
+            onUpdate: (self) => {
+                const progress = self.progress;
+                sphere.rotation.y = progress * Math.PI * 2;
+                sphere.scale.setScalar(1 + progress * 0.5);
+            }
+        });
+
+        // Cube animation
+        ScrollTrigger.create({
+            trigger: "#section2",
+            start: "top center",
+            end: "bottom center",
+            onUpdate: (self) => {
+                const progress = self.progress;
+                cube.rotation.x = progress * Math.PI;
+                cube.rotation.z = progress * Math.PI * 0.5;
+                cube.position.y = progress * 2;
+            }
+        });
+
+        // Torus animation
+        ScrollTrigger.create({
+            trigger: "#section3",
+            start: "top center",
+            end: "bottom center",
+            onUpdate: (self) => {
+                const progress = self.progress;
+                torus.rotation.y = progress * Math.PI * 4;
+                torus.scale.setScalar(1 + progress);
+                torus.material.metalness = 0.5 + progress * 0.5;
+            }
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
