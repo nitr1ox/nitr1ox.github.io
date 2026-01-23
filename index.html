@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>NITROX IS EVERYWHERE</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
+    cursor: none;
+  }
+
+  /* FLASH ROUGE */
+  #flash {
+    position: fixed;
+    inset: 0;
+    background: red;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  /* CURSEUR FAKE */
+  #cursor {
+    position: fixed;
+    width: 18px;
+    height: 18px;
+    border: 2px solid red;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .shake {
+    animation: shake 0.1s infinite;
+  }
+
+  @keyframes shake {
+    0% { transform: translate(0,0); }
+    25% { transform: translate(4px,-4px); }
+    50% { transform: translate(-4px,4px); }
+    75% { transform: translate(4px,4px); }
+    100% { transform: translate(-4px,-4px); }
+  }
+
+  .window {
+    position: absolute;
+    width: 220px;
+    height: 140px;
+    background: #c0c0c0;
+    border: 2px solid black;
+    box-shadow: 4px 4px 0 black;
+    user-select: none;
+  }
+
+  .titlebar {
+    background: navy;
+    color: white;
+    padding: 4px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .content {
+    background: white;
+    height: calc(100% - 26px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: red;
+  }
+</style>
+</head>
+<body>
+
+<div id="flash"></div>
+<div id="cursor"></div>
+
+<script>
+/* ================= CURSEUR ================= */
+const cursor = document.getElementById("cursor");
+let mouseX = 0, mouseY = 0;
+let cursorVisible = true;
+
+document.addEventListener("mousemove", e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  cursor.style.left = mouseX + (Math.random()*10-5) + "px";
+  cursor.style.top  = mouseY + (Math.random()*10-5) + "px";
+});
+
+setInterval(() => {
+  cursorVisible = !cursorVisible;
+  cursor.style.display = cursorVisible ? "block" : "none";
+}, 700);
+
+/* ================= FENÊTRES ================= */
+const wins = [];
+
+function createWindow(x, y) {
+  const w = document.createElement("div");
+  w.className = "window";
+  w.innerHTML = `
+    <div class="titlebar">ERREUR FATALE</div>
+    <div class="content">NITROX</div>
+  `;
+
+  w.x = x ?? Math.random() * (innerWidth - 220);
+  w.y = y ?? Math.random() * (innerHeight - 140);
+  w.vx = Math.random()*4 + 2;
+  w.vy = Math.random()*4 + 2;
+
+  // CLONAGE AU CLIC
+  w.addEventListener("mousedown", e => {
+    e.stopPropagation();
+    for (let i = 0; i < 3; i++) {
+      createWindow(w.x + Math.random()*60, w.y + Math.random()*60);
+    }
+  });
+
+  document.body.appendChild(w);
+  wins.push(w);
+}
+
+function animateWindows() {
+  wins.forEach(w => {
+    const dx = w.x + 110 - mouseX;
+    const dy = w.y + 70  - mouseY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+
+    // FUITE SOURIS
+    if (dist < 180) {
+      w.vx += dx / dist * 2;
+      w.vy += dy / dist * 2;
+    }
+
+    w.x += w.vx;
+    w.y += w.vy;
+
+    if (w.x < 0 || w.x + 220 > innerWidth)  w.vx *= -1;
+    if (w.y < 0 || w.y + 140 > innerHeight) w.vy *= -1;
+
+    w.style.left = w.x + "px";
+    w.style.top  = w.y + "px";
+  });
+
+  requestAnimationFrame(animateWindows);
+}
+
+for (let i = 0; i < 8; i++) createWindow();
+setInterval(() => { if (wins.length < 140) createWindow(); }, 900);
+animateWindows();
+
+/* ================= MUSIQUE / BPM CHAOS ================= */
+let ctx, gain, osc;
+let bpm = 70;
+let started = false;
+const flash = document.getElementById("flash");
+
+function startAudio() {
+  if (started) return;
+  started = true;
+
+  ctx = new (window.AudioContext || window.webkitAudioContext)();
+  gain = ctx.createGain();
+  gain.gain.value = 0.15;
+  gain.connect(ctx.destination);
+
+  osc = ctx.createOscillator();
+  osc.type = "sawtooth";
+  osc.frequency.value = 50;
+  osc.connect(gain);
+  osc.start();
+
+  scheduleBeat();
+}
+
+function scheduleBeat() {
+  const interval = 60000 / bpm;
+
+  // FLASH SYNCHRO
+  flash.style.opacity = 0.6;
+  setTimeout(() => flash.style.opacity = 0, interval * 0.3);
+
+  // variation sale
+  osc.frequency.setValueAtTime(
+    40 + Math.random()*25,
+    ctx.currentTime
+  );
+
+  // ACCÉLÉRATION BPM
+  bpm += 1.2;
+  if (bpm > 260) bpm = 260;
+
+  // TREMBLEMENT GLOBAL
+  if (bpm > 140) document.body.classList.add("shake");
+
+  setTimeout(scheduleBeat, interval);
+}
+
+document.addEventListener("mousedown", startAudio);
+</script>
+
+</body>
+</html>
