@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche Avancée</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-header {
+            text-align: center;
+            margin-bottom: 50px;
+            margin-top: 80px;
+        }
+
+        .search-header h1 {
+            color: white;
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .search-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            background: white;
+            border-radius: 50px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .search-input-wrapper:hover {
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-input-wrapper.active {
+            border-radius: 25px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 20px 60px 20px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            outline: none;
+            background: transparent;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .search-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .results-container {
+            display: none;
+        }
+
+        .results-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results-stats {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            animation: slideUp 0.4s ease;
+            animation-fill-mode: both;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-header {
+            display: flex;
+            align-items: start;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .result-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .result-icon svg {
+            width: 25px;
+            height: 25px;
+            fill: white;
+        }
+
+        .result-info {
+            flex: 1;
+        }
+
+        .result-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .result-title:hover {
+            color: #667eea;
+        }
+
+        .result-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85em;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+
+        .result-description {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .result-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 5px 12px;
+            background: #edf2f7;
+            border-radius: 20px;
+            font-size: 0.8em;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 20px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.1em;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            display: none;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        .no-results-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .no-results h3 {
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .no-results p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            .search-header h1 {
+                font-size: 2em;
+            }
+
+            .result-card {
+                padding: 20px;
+            }
+
+            .filters {
+                gap: 10px;
+            }
+
+            .filter-btn {
+                padding: 8px 20px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="search-header">
+            <h1>Recherche Avancée</h1>
+            <p>Trouvez exactement ce que vous cherchez</p>
+        </div>
+
+        <div class="search-box">
+            <div class="search-input-wrapper">
+                <input type="text" class="search-input" placeholder="Que recherchez-vous ?" id="searchInput">
+                <button class="search-btn" id="searchBtn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="documents">Documents</button>
+            <button class="filter-btn" data-filter="images">Images</button>
+            <button class="filter-btn" data-filter="videos">Vidéos</button>
+            <button class="filter-btn" data-filter="articles">Articles</button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p class="loading-text">Recherche en cours...</p>
+        </div>
+
+        <div class="no-results" id="noResults">
+            <div class="no-results-icon">🔍</div>
+            <h3>Aucun résultat trouvé</h3>
+            <p>Essayez avec d'autres mots-clés</p>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <div class="results-stats" id="resultsStats"></div>
+            <div id="resultsGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const loading = document.getElementById('loading');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const resultsGrid = document.getElementById('resultsGrid');
+        const resultsStats = document.getElementById('resultsStats');
+        const noResults = document.getElementById('noResults');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        
+        let currentFilter = 'all';
+        let allResults = [];
+
+        // Données de démonstration
+        const mockData = {
+            'javascript': [
+                { type: 'documents', title: 'Guide complet JavaScript ES6+', category: 'Documentation', date: '2024-01-15', description: 'Un guide exhaustif sur les fonctionnalités modernes de JavaScript incluant les promesses, async/await, modules et plus encore.', tags: ['JS', 'ES6', 'Tutorial'] },
+                { type: 'articles', title: 'Les meilleures pratiques JavaScript en 2024', category: 'Blog', date: '2024-02-01', description: 'Découvrez les patterns et techniques recommandés pour écrire du code JavaScript maintenable et performant.', tags: ['Best Practices', 'Clean Code'] },
+                { type: 'videos', title: 'Masterclass JavaScript Avancé', category: 'Formation', date: '2024-01-20', description: 'Formation vidéo complète sur les concepts avancés : closures, prototypes, event loop et optimisation.', tags: ['Video', 'Formation', 'Avancé'] }
+            ],
+            'python': [
+                { type: 'documents', title: 'Python pour la Data Science', category: 'Cours', date: '2024-01-10', description: 'Apprenez à utiliser Python pour l\'analyse de données avec NumPy, Pandas et Matplotlib.', tags: ['Python', 'Data Science', 'ML'] },
+                { type: 'articles', title: 'Django vs Flask : Quel framework choisir ?', category: 'Comparatif', date: '2024-02-05', description: 'Analyse détaillée des deux frameworks Python les plus populaires pour le développement web.', tags: ['Django', 'Flask', 'Web'] },
+                { type: 'images', title: 'Infographie Python Ecosystem', category: 'Ressource', date: '2024-01-25', description: 'Visualisation complète de l\'écosystème Python et ses principales bibliothèques.', tags: ['Infographie', 'Ecosystem'] }
+            ],
+            'design': [
+                { type: 'articles', title: 'Les tendances UI/UX 2024', category: 'Design', date: '2024-02-10', description: 'Explorez les nouvelles tendances en design d\'interface et expérience utilisateur pour cette année.', tags: ['UI', 'UX', 'Trends'] },
+                { type: 'images', title: 'Collection de palettes de couleurs', category: 'Inspiration', date: '2024-01-30', description: 'Plus de 100 palettes de couleurs harmonieuses pour vos projets créatifs.', tags: ['Colors', 'Palettes', 'Design'] },
+                { type: 'videos', title: 'Figma : De débutant à expert', category: 'Tutorial', date: '2024-02-03', description: 'Maîtrisez Figma avec cette série de tutoriels vidéo complets et pratiques.', tags: ['Figma', 'Tool', 'Design'] }
+            ]
+        };
+
+        const icons = {
+            documents: '<svg viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg>',
+            articles: '<svg viewBox="0 0 24 24"><path d="M19,5V7H15V5H19M9,5V11H5V5H9M19,13V19H15V13H19M9,17V19H5V17H9M21,3H13V9H21V3M11,3H3V13H11V3M21,11H13V21H21V11M11,15H3V21H11V15Z"/></svg>',
+            videos: '<svg viewBox="0 0 24 24"><path d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z"/></svg>',
+            images: '<svg viewBox="0 0 24 24"><path d="M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z"/></svg>'
+        };
+
+        function performSearch() {
+            const query = searchInput.value.trim().toLowerCase();
+            
+            if (!query) return;
+
+            loading.classList.add('show');
+            resultsContainer.classList.remove('show');
+            noResults.classList.remove('show');
+
+            setTimeout(() => {
+                const results = mockData[query] || generateGenericResults(query);
+                allResults = results;
+                
+                loading.classList.remove('show');
+                
+                if (results.length > 0) {
+                    displayResults(results);
+                } else {
+                    noResults.classList.add('show');
+                }
+            }, 1000);
+        }
+
+        function generateGenericResults(query) {
+            return [
+                { type: 'articles', title: `Introduction à ${query}`, category: 'Article', date: '2024-02-05', description: `Découvrez les bases de ${query} et comment l'utiliser efficacement dans vos projets.`, tags: [query, 'Tutorial', 'Débutant'] },
+                { type: 'documents', title: `Documentation ${query}`, category: 'Documentation', date: '2024-01-28', description: `La documentation complète pour maîtriser tous les aspects de ${query}.`, tags: [query, 'Docs', 'Référence'] },
+                { type: 'videos', title: `${query} en pratique`, category: 'Formation', date: '2024-02-01', description: `Apprenez ${query} à travers des exemples concrets et des cas d'usage réels.`, tags: [query, 'Video', 'Pratique'] }
+            ];
+        }
+
+        function displayResults(results) {
+            const filteredResults = currentFilter === 'all' 
+                ? results 
+                : results.filter(r => r.type === currentFilter);
+
+            resultsStats.innerHTML = `
+                <span><strong>${filteredResults.length}</strong> résultat${filteredResults.length > 1 ? 's' : ''} trouvé${filteredResults.length > 1 ? 's' : ''}</span>
+                <span>Recherche : <strong>${searchInput.value}</strong></span>
+            `;
+
+            resultsGrid.innerHTML = filteredResults.map((result, index) => `
+                <div class="result-card" style="animation-delay: ${index * 0.1}s">
+                    <div class="result-header">
+                        <div class="result-icon">
+                            ${icons[result.type]}
+                        </div>
+                        <div class="result-info">
+                            <h3 class="result-title">${result.title}</h3>
+                            <div class="result-meta">
+                                <span>📁 ${result.category}</span>
+                                <span>📅 ${result.date}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="result-description">${result.description}</p>
+                    <div class="result-tags">
+                        ${result.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            resultsContainer.classList.add('show');
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        searchInput.addEventListener('focus', () => {
+            document.querySelector('.search-input-wrapper').classList.add('active');
+        });
+
+        searchInput.addEventListener('blur', () => {
+            if (!searchInput.value) {
+                document.querySelector('.search-input-wrapper').classList.remove('active');
+            }
+        });
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                
+                if (allResults.length > 0) {
+                    displayResults(allResults);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
