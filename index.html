@@ -2,30 +2,23 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OM — Une Passion</title>
-  <meta name="description" content="Site fan OM : l'OM est une passion, avec effets 3D, cartes et images." />
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OM — Une Passion (Carrousel 3D)</title>
   <style>
     :root{
-      --bg: #050914;
-      --bg2:#070b1a;
-      --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.10);
-      --stroke: rgba(255,255,255,.14);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.70);
-      --blue:#00b3ff;
-      --cyan:#2ee6ff;
-      --gold:#ffcc66;
-      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --bg:#050914; --bg2:#070b1a;
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.70);
+      --card:rgba(255,255,255,.06);
+      --stroke:rgba(255,255,255,.14);
+      --blue:#00b3ff; --cyan:#2ee6ff; --gold:#ffcc66;
+      --shadow:0 18px 60px rgba(0,0,0,.55);
     }
-
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue";
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
       color:var(--text);
       background:
         radial-gradient(1200px 700px at 20% 10%, rgba(0,179,255,.22), transparent 60%),
@@ -34,387 +27,257 @@
         linear-gradient(180deg, var(--bg), var(--bg2));
       overflow-x:hidden;
     }
-
-    /* ======= Background "stadium lights" ======= */
     .lights{
-      position:fixed; inset:0;
-      pointer-events:none;
-      filter: blur(40px) saturate(120%);
-      opacity:.65;
-      z-index:-1;
+      position:fixed; inset:0; pointer-events:none; z-index:-1;
+      filter:blur(40px) saturate(120%); opacity:.65;
     }
-    .lights::before, .lights::after{
-      content:"";
-      position:absolute; inset:-40px;
-      background:
-        conic-gradient(from 210deg at 50% 50%,
-          rgba(0,179,255,.0),
-          rgba(0,179,255,.28),
-          rgba(255,204,102,.18),
-          rgba(46,230,255,.22),
-          rgba(0,179,255,.0)
-        );
-      animation: spin 16s linear infinite;
-      transform-origin:center;
+    .lights::before,.lights::after{
+      content:""; position:absolute; inset:-40px;
+      background:conic-gradient(from 210deg at 50% 50%,
+        rgba(0,179,255,0), rgba(0,179,255,.28),
+        rgba(255,204,102,.18), rgba(46,230,255,.22),
+        rgba(0,179,255,0));
+      animation:spin 16s linear infinite;
     }
-    .lights::after{
-      animation-duration: 26s;
-      opacity:.55;
-      mix-blend-mode: screen;
-    }
-    @keyframes spin{ to{ transform:rotate(360deg);} }
+    .lights::after{animation-duration:26s;opacity:.55;mix-blend-mode:screen}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* ======= Layout ======= */
     header{
-      position:sticky;
-      top:0;
+      position:sticky; top:0; z-index:50;
       backdrop-filter: blur(14px);
       background: rgba(5,9,20,.55);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      z-index:50;
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
-    .wrap{
-      width:min(1100px, 92vw);
-      margin:0 auto;
-    }
-    .nav{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:14px 0;
-      gap:12px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      text-decoration:none; color:var(--text);
-      user-select:none;
-    }
+    .wrap{width:min(1100px,92vw); margin:0 auto}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);user-select:none}
     .logo{
-      width:42px; height:42px;
-      border-radius:14px;
-      background:
-        linear-gradient(135deg, rgba(0,179,255,.95), rgba(46,230,255,.55));
-      box-shadow: 0 10px 24px rgba(0,179,255,.22);
+      width:42px;height:42px;border-radius:14px;
+      background:linear-gradient(135deg, rgba(0,179,255,.95), rgba(46,230,255,.55));
+      box-shadow:0 10px 24px rgba(0,179,255,.22);
       position:relative;
-      transform: translateZ(0);
     }
     .logo::after{
-      content:"";
-      position:absolute; inset:2px;
-      border-radius:12px;
-      background: linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,0));
+      content:""; position:absolute; inset:2px; border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,0));
       border:1px solid rgba(255,255,255,.18);
     }
-    .brand strong{ letter-spacing:.4px; }
-    .brand small{ display:block; color:var(--muted); font-weight:500; margin-top:2px; }
+    .brand strong{letter-spacing:.4px}
+    .brand small{display:block;color:var(--muted);font-weight:500;margin-top:2px}
 
-    .links{
-      display:flex; gap:10px; flex-wrap:wrap;
-      justify-content:flex-end;
-    }
+    .links{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
     .links a{
-      color:var(--muted);
-      text-decoration:none;
-      font-weight:600;
-      padding:10px 12px;
-      border-radius:14px;
+      color:var(--muted);text-decoration:none;font-weight:700;
+      padding:10px 12px;border-radius:14px;
       border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
-      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+      background:rgba(255,255,255,.03);
+      transition:transform .18s ease, background .18s ease, border-color .18s ease;
     }
     .links a:hover{
-      transform: translateY(-2px);
-      background: rgba(255,255,255,.06);
-      border-color: rgba(255,255,255,.14);
-      color: var(--text);
+      transform:translateY(-2px);
+      background:rgba(255,255,255,.06);
+      border-color:rgba(255,255,255,.14);
+      color:var(--text);
     }
 
-    /* ======= Hero ======= */
     .hero{
-      padding:64px 0 28px;
+      padding:56px 0 18px;
       display:grid;
       grid-template-columns: 1.1fr .9fr;
       gap:26px;
       align-items:center;
     }
-    @media (max-width: 900px){
-      .hero{ grid-template-columns: 1fr; padding-top:44px; }
-    }
+    @media (max-width: 900px){ .hero{grid-template-columns:1fr; padding-top:44px} }
 
     .kicker{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:999px;
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      color:var(--muted);
-      font-weight:700;
-      letter-spacing:.3px;
+      background:rgba(255,255,255,.05);
+      color:var(--muted);font-weight:800;letter-spacing:.3px;
     }
     .dot{
-      width:10px; height:10px; border-radius:50%;
-      background: radial-gradient(circle at 30% 30%, #fff, var(--cyan));
-      box-shadow: 0 0 18px rgba(46,230,255,.45);
+      width:10px;height:10px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, #fff, var(--cyan));
+      box-shadow:0 0 18px rgba(46,230,255,.45);
     }
-
     h1{
-      font-size: clamp(34px, 4vw, 56px);
+      font-size:clamp(34px,4vw,56px);
       line-height:1.02;
       margin:16px 0 10px;
-      letter-spacing:-0.5px;
+      letter-spacing:-.5px;
     }
-    .lead{
-      color:var(--muted);
-      font-size: clamp(16px, 1.35vw, 18px);
-      line-height:1.6;
-      margin: 0 0 18px;
-    }
-    .ctaRow{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top: 16px;
-    }
+    .lead{color:var(--muted);font-size:clamp(16px,1.35vw,18px);line-height:1.6;margin:0 0 14px}
+
+    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
     .btn{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:12px 14px;
-      border-radius:16px;
+      display:inline-flex;align-items:center;gap:10px;
+      padding:12px 14px;border-radius:16px;
       border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color:var(--text);
-      text-decoration:none;
-      font-weight:800;
-      letter-spacing:.2px;
-      box-shadow: 0 12px 34px rgba(0,0,0,.25);
-      transition: transform .18s ease, background .18s ease, border-color .18s ease;
-      will-change: transform;
+      background:rgba(255,255,255,.06);
+      color:var(--text);text-decoration:none;font-weight:900;
+      box-shadow:0 12px 34px rgba(0,0,0,.25);
+      transition:transform .18s ease, background .18s ease, border-color .18s ease;
+      will-change:transform;
     }
-    .btn:hover{ transform: translateY(-2px); background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.20); }
+    .btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.20)}
     .btn.primary{
-      background: linear-gradient(135deg, rgba(0,179,255,.90), rgba(46,230,255,.45));
-      border-color: rgba(46,230,255,.38);
+      background:linear-gradient(135deg, rgba(0,179,255,.90), rgba(46,230,255,.45));
+      border-color:rgba(46,230,255,.38);
     }
-    .btn.primary:hover{ transform: translateY(-2px) scale(1.01); }
+    .btn.primary:hover{transform:translateY(-2px) scale(1.01)}
     .btn .icon{
-      width:24px; height:24px;
-      border-radius:10px;
-      background: rgba(255,255,255,.18);
-      display:grid; place-items:center;
+      width:24px;height:24px;border-radius:10px;
+      background:rgba(255,255,255,.18);
+      display:grid;place-items:center;
       border:1px solid rgba(255,255,255,.18);
     }
 
-    /* ======= 3D Showcase card ======= */
-    .tiltStage{
-      perspective: 1000px;
-      position:relative;
+    section{padding: 26px 0}
+    .sectionTitle{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:16px; margin:8px 0 14px;
     }
-    .showcase{
+    .sectionTitle h2{margin:0;font-size:22px}
+    .sectionTitle p{margin:0;color:var(--muted);max-width:60ch}
+
+    .hr{
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+      margin:18px 0;
+    }
+
+    /* ===== Tilt cards + glow ===== */
+    .tiltStage{perspective: 1000px}
+    .tilt{ transform-style:preserve-3d; will-change:transform; position:relative; }
+    .glow{
+      position:absolute; inset:-120px;
+      background:radial-gradient(220px 180px at var(--mx,50%) var(--my,30%), rgba(46,230,255,.22), transparent 60%);
+      opacity:0; transition:opacity .2s ease;
+      pointer-events:none; mix-blend-mode:screen;
+    }
+    .tilt:hover .glow{opacity:.9}
+
+    /* ===== 3D Carousel (Coverflow) ===== */
+    .carouselWrap{
       border-radius: 26px;
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12);
       box-shadow: var(--shadow);
+      padding: 18px;
       overflow:hidden;
-      transform-style: preserve-3d;
-      will-change: transform;
       position:relative;
-      min-height: 380px;
     }
-    .showcase::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(500px 220px at 15% 15%, rgba(46,230,255,.20), transparent 60%),
-        radial-gradient(500px 260px at 85% 35%, rgba(255,204,102,.14), transparent 60%);
-      pointer-events:none;
-    }
-    .showImg{
-      position:absolute; inset:0;
-      background-image:
-        linear-gradient(180deg, rgba(5,9,20,.0), rgba(5,9,20,.55)),
-        url("https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1400&q=80");
-      background-size: cover;
-      background-position: center;
-      filter: contrast(1.05) saturate(1.05);
-      transform: translateZ(-30px) scale(1.08);
-    }
-    .showContent{
-      position:absolute; inset:0;
-      display:flex;
-      flex-direction:column;
-      justify-content:flex-end;
-      padding:22px;
-      transform: translateZ(30px);
-    }
-    .badgeRow{
-      display:flex; gap:8px; flex-wrap:wrap;
+    .carouselHeader{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
       margin-bottom: 10px;
     }
-    .badge{
+    .carouselHeader .hint{
+      color:var(--muted);
+      font-weight:700;
+      font-size: 13px;
+    }
+    .carousel{
+      position:relative;
+      height: 360px;
+      perspective: 1200px;
+      user-select:none;
+      touch-action: pan-y;
+    }
+    @media (max-width: 640px){
+      .carousel{ height: 320px; }
+    }
+
+    .track{
+      position:absolute; inset:0;
+      transform-style: preserve-3d;
+    }
+
+    .slide{
+      position:absolute;
+      left:50%; top:50%;
+      width: min(560px, 78vw);
+      height: 300px;
+      transform-style: preserve-3d;
+      transform: translate(-50%, -50%);
+      border-radius: 22px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 22px 70px rgba(0,0,0,.55);
+      cursor: grab;
+    }
+    .slide:active{ cursor: grabbing; }
+    .slide::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.55));
+      pointer-events:none;
+    }
+
+    .slideImg{
+      position:absolute; inset:0;
+      background-size: cover;
+      background-position:center;
+      transform: translateZ(-24px) scale(1.06);
+      filter:saturate(1.05) contrast(1.03);
+    }
+
+    .slideCap{
+      position:absolute; left:16px; right:16px; bottom:14px;
+      transform: translateZ(30px);
+      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+    }
+    .slideCap strong{
+      font-size: 16px;
+      letter-spacing:.2px;
+      text-shadow: 0 12px 38px rgba(0,0,0,.65);
+    }
+    .pill{
       padding:8px 10px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(5,9,20,.45);
       backdrop-filter: blur(10px);
       color: rgba(255,255,255,.85);
-      font-weight:800;
+      font-weight:900;
       font-size: 12px;
-      letter-spacing:.4px;
-      text-transform:uppercase;
-    }
-    .showTitle{
-      font-size: 22px;
-      font-weight: 950;
-      letter-spacing: .2px;
-      margin:0 0 6px;
-      text-shadow: 0 12px 40px rgba(0,0,0,.55);
-    }
-    .showText{
-      margin:0;
-      color: rgba(255,255,255,.78);
-      line-height:1.5;
-      text-shadow: 0 12px 40px rgba(0,0,0,.55);
-      max-width: 48ch;
+      letter-spacing:.3px;
+      white-space:nowrap;
     }
 
-    /* ======= Sections ======= */
-    section{
-      padding: 26px 0;
+    .controls{
+      display:flex; gap:10px; align-items:center; justify-content:flex-end;
+      margin-top: 12px;
+      flex-wrap:wrap;
     }
-    .sectionTitle{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:16px;
-      margin: 8px 0 14px;
-    }
-    .sectionTitle h2{
-      margin:0;
-      font-size: 22px;
-      letter-spacing: .2px;
-    }
-    .sectionTitle p{
-      margin:0;
-      color: var(--muted);
-      max-width: 56ch;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap:14px;
-    }
-    .card{
-      grid-column: span 4;
-      border-radius: 22px;
+    .ctrlBtn{
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 14px 44px rgba(0,0,0,.35);
-      overflow:hidden;
-      transform-style: preserve-3d;
-      will-change: transform;
-      position:relative;
+      color: var(--text);
+      font-weight:900;
+      cursor:pointer;
+      transition: transform .16s ease, background .16s ease, border-color .16s ease;
     }
-    @media (max-width: 980px){ .card{ grid-column: span 6; } }
-    @media (max-width: 640px){ .card{ grid-column: span 12; } }
+    .ctrlBtn:hover{ transform: translateY(-2px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.20); }
+    .toggle{
+      display:flex; gap:8px; align-items:center;
+      color:var(--muted); font-weight:800; font-size: 13px;
+      padding:10px 12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .toggle input{ accent-color: var(--cyan); }
 
-    .card .img{
-      height: 160px;
-      background-size: cover;
-      background-position:center;
-      filter: saturate(1.05) contrast(1.02);
-      transform: translateZ(-18px) scale(1.06);
-    }
-    .card .body{
-      padding: 14px 14px 16px;
-      transform: translateZ(18px);
-    }
-    .card h3{
-      margin: 0 0 6px;
-      font-size: 16px;
-      letter-spacing:.2px;
-    }
-    .card p{
-      margin:0;
-      color: var(--muted);
-      line-height:1.55;
-      font-size: 14px;
-    }
+    /* ===== Reveal ===== */
+    .reveal{opacity:0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease}
+    .reveal.visible{opacity:1; transform: translateY(0)}
 
-    /* 3D glow following mouse */
-    .glow{
-      position:absolute;
-      inset:-120px;
-      background: radial-gradient(220px 180px at var(--mx, 50%) var(--my, 30%), rgba(46,230,255,.22), transparent 60%);
-      opacity:.0;
-      transition: opacity .2s ease;
-      pointer-events:none;
-      mix-blend-mode: screen;
-    }
-    .card:hover .glow, .showcase:hover .glow{ opacity: .9; }
-
-    /* ======= Quote banner ======= */
-    .banner{
-      border-radius: 26px;
-      padding: 18px 18px;
-      background:
-        radial-gradient(800px 240px at 20% 30%, rgba(0,179,255,.22), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow: var(--shadow);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      overflow:hidden;
-      position:relative;
-    }
-    .banner::after{
-      content:"";
-      position:absolute;
-      width: 220px; height: 220px;
-      right: -80px; top: -110px;
-      background: radial-gradient(circle at 30% 30%, rgba(255,204,102,.30), transparent 60%);
-      filter: blur(10px);
-    }
-    .banner strong{
-      display:block;
-      font-size: 18px;
-      letter-spacing:.2px;
-    }
-    .banner span{ color: var(--muted); display:block; margin-top:4px; }
-
-    /* ======= Footer ======= */
-    footer{
-      padding: 30px 0 44px;
-      color: rgba(255,255,255,.62);
-      text-align:center;
-    }
-    footer a{ color: rgba(46,230,255,.9); text-decoration:none; font-weight:800; }
-
-    /* ======= Smooth reveal ======= */
-    .reveal{
-      opacity:0;
-      transform: translateY(14px);
-      transition: opacity .6s ease, transform .6s ease;
-    }
-    .reveal.visible{
-      opacity:1;
-      transform: translateY(0);
-    }
-
-    /* ======= Little separator ======= */
-    .hr{
-      height:1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
-      margin: 18px 0;
-    }
+    footer{padding:30px 0 44px; color: rgba(255,255,255,.62); text-align:center}
   </style>
 </head>
-
 <body>
   <div class="lights"></div>
 
@@ -427,12 +290,10 @@
           <small>Bleu & Blanc • Ferveur • Frissons</small>
         </div>
       </a>
-
       <nav class="links">
-        <a href="#passion">Passion</a>
-        <a href="#moments">Moments</a>
-        <a href="#galerie">Galerie</a>
-        <a href="#chants">Chants</a>
+        <a href="#top">Accueil</a>
+        <a href="#carrousel">Carrousel 3D</a>
+        <a href="#chants">Texte</a>
       </nav>
     </div>
   </header>
@@ -441,171 +302,64 @@
     <section class="hero">
       <div class="reveal">
         <div class="kicker"><span class="dot"></span> Ici, l’OM n’est pas un club : c’est une émotion.</div>
-        <h1>L’OM, c’est la passion qui te suit partout.</h1>
+        <h1>OM : une passion qui se vit, pas qui se raconte.</h1>
         <p class="lead">
-          Des soirs de match au Vieux-Port, des frissons au coup d’envoi, et cette fierté bleu & blanc
-          qui ne s’éteint jamais. Bienvenue sur une page qui sent le stade, la mer et la ferveur.
+          Le Vélodrome, la ville, les chants… et cette fierté bleu & blanc. Survole, clique, fais glisser :
+          ce site bouge comme un soir de match.
         </p>
-
         <div class="ctaRow">
-          <a class="btn primary" href="#moments">
-            <span class="icon">⚡</span>
-            Voir les moments
-          </a>
-          <a class="btn" href="#galerie">
-            <span class="icon">📸</span>
-            Galerie 3D
-          </a>
+          <a class="btn primary" href="#carrousel"><span class="icon">🌀</span> Voir le carrousel 3D</a>
+          <a class="btn" href="#chants"><span class="icon">💬</span> Lire le texte</a>
         </div>
-
         <div class="hr"></div>
-
-        <div class="banner reveal" style="transition-delay:.08s">
-          <div>
-            <strong>“À Marseille, le football est une histoire de cœur.”</strong>
-            <span>Et l’OM, c’est le cœur qui bat plus fort.</span>
-          </div>
-          <div style="font-weight:900; color: rgba(255,255,255,.85);">💙⚪</div>
-        </div>
+        <p style="color:var(--muted);margin:0;font-weight:700">
+          Astuce : sur PC, fais glisser le carrousel avec la souris. Sur mobile, swipe.
+        </p>
       </div>
 
       <div class="tiltStage reveal" style="transition-delay:.12s">
-        <article class="showcase tilt" data-tilt>
+        <div class="tilt carouselWrap" data-tilt>
           <div class="glow" aria-hidden="true"></div>
-          <div class="showImg" aria-hidden="true"></div>
-          <div class="showContent">
-            <div class="badgeRow">
-              <span class="badge">Ferveur</span>
-              <span class="badge">Bleu & Blanc</span>
-              <span class="badge">Vélodrome</span>
+          <div class="carouselHeader">
+            <div>
+              <strong style="display:block;font-size:18px;letter-spacing:.2px">Carrousel 3D “Coverflow”</strong>
+              <span class="hint">Autoplay + drag + profondeur</span>
             </div>
-            <h3 class="showTitle">Le Vélodrome : un rugissement.</h3>
-            <p class="showText">
-              Quand la tribune s’allume et que la ville vibre, on comprend : l’OM, c’est plus grand que 90 minutes.
-            </p>
+            <span class="pill">💙⚪ OM</span>
           </div>
-        </article>
-      </div>
-    </section>
 
-    <section id="passion" class="reveal">
-      <div class="sectionTitle">
-        <h2>La passion en 3 mots</h2>
-        <p>Une ambiance, une identité, un amour qui ne s’explique pas… il se vit.</p>
-      </div>
-
-      <div class="grid">
-        <article class="card tilt" data-tilt>
-          <div class="glow" aria-hidden="true"></div>
-          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1520975958225-0e2f18d1f431?auto=format&fit=crop&w=1200&q=80')"></div>
-          <div class="body">
-            <h3>Ferveur</h3>
-            <p>Des frissons dans le dos, la peau qui se hérisse : ici on chante, on pousse, on y croit.</p>
+          <div id="carrousel" class="carousel">
+            <div class="track" id="track"></div>
           </div>
-        </article>
 
-        <article class="card tilt" data-tilt>
-          <div class="glow" aria-hidden="true"></div>
-          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1471295253337-3ceaaedca402?auto=format&fit=crop&w=1200&q=80')"></div>
-          <div class="body">
-            <h3>Identité</h3>
-            <p>Marseille, la mer, le bruit, la lumière : une ville entière dans un maillot.</p>
+          <div class="controls">
+            <button class="ctrlBtn" id="prev">◀ Précédent</button>
+            <button class="ctrlBtn" id="next">Suivant ▶</button>
+
+            <label class="toggle" title="Active ou coupe le défilement automatique">
+              <input type="checkbox" id="autoplay" checked />
+              Autoplay
+            </label>
+
+            <button class="ctrlBtn" id="random">🎲 Aléatoire</button>
           </div>
-        </article>
-
-        <article class="card tilt" data-tilt>
-          <div class="glow" aria-hidden="true"></div>
-          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80')"></div>
-          <div class="body">
-            <h3>Fidélité</h3>
-            <p>Dans les hauts comme dans les bas : l’OM reste. Toujours. Parce que c’est une passion.</p>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section id="moments" class="reveal">
-      <div class="sectionTitle">
-        <h2>Moments qui collent à la mémoire</h2>
-        <p>Des soirs de match, des retournements, des émotions… et ce sentiment : “on l’a vécu ensemble”.</p>
-      </div>
-
-      <div class="grid">
-        <article class="card tilt" data-tilt style="grid-column: span 7;">
-          <div class="glow" aria-hidden="true"></div>
-          <div class="img" style="height:220px;background-image:url('https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1400&q=80')"></div>
-          <div class="body">
-            <h3>Le coup d’envoi</h3>
-            <p>Le stade gronde, les drapeaux bougent, et tout le monde se lève : ça commence.</p>
-          </div>
-        </article>
-
-        <article class="card tilt" data-tilt style="grid-column: span 5;">
-          <div class="glow" aria-hidden="true"></div>
-          <div class="img" style="height:220px;background-image:url('https://images.unsplash.com/photo-1508098682722-e99c643e7f2b?auto=format&fit=crop&w=1400&q=80')"></div>
-          <div class="body">
-            <h3>Le but</h3>
-            <p>Une seconde de silence… puis l’explosion. Les bras en l’air, le cœur en sprint.</p>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section id="galerie" class="reveal">
-      <div class="sectionTitle">
-        <h2>Galerie “effet 3D”</h2>
-        <p>Passe ta souris sur les cartes : elles se penchent et la lumière suit ton mouvement.</p>
-      </div>
-
-      <div class="grid">
-        <article class="card tilt" data-tilt>
-          <div class="glow"></div>
-          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80')"></div>
-          <div class="body">
-            <h3>Ambiance</h3>
-            <p>Le stade, la foule, les chants : une énergie impossible à copier.</p>
-          </div>
-        </article>
-
-        <article class="card tilt" data-tilt>
-          <div class="glow"></div>
-          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80')"></div>
-          <div class="body">
-            <h3>Collectif</h3>
-            <p>Une équipe, une ville, une même rage de vaincre.</p>
-          </div>
-        </article>
-
-        <article class="card tilt" data-tilt>
-          <div class="glow"></div>
-          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1200&q=80')"></div>
-          <div class="body">
-            <h3>Fierté</h3>
-            <p>Bleu & blanc, toujours. Ce n’est pas qu’un look : c’est un drapeau.</p>
-          </div>
-        </article>
+        </div>
       </div>
     </section>
 
     <section id="chants" class="reveal">
       <div class="sectionTitle">
         <h2>Chants & promesse</h2>
-        <p>Un petit texte “tribune” pour ton site. Tu peux le modifier comme tu veux.</p>
+        <p>Petit texte “tribune” (modifiable) pour ton site.</p>
       </div>
 
-      <div class="banner" style="align-items:flex-start;">
-        <div style="max-width:70ch;">
-          <strong>On est là.</strong>
-          <span style="margin-top:10px; display:block; line-height:1.65;">
-            On est là quand ça gagne, on est là quand c’est dur. On est là parce qu’on aime.
-            Parce que l’OM, c’est une passion : une voix, un peuple, un battement.
-            Et tant qu’il y aura le bleu et le blanc, il y aura la fierté.
-          </span>
-        </div>
-        <a class="btn" href="#top" style="white-space:nowrap;">
-          <span class="icon">⬆️</span>
-          Retour haut
-        </a>
+      <div class="carouselWrap">
+        <strong style="display:block;font-size:18px">On est là.</strong>
+        <p style="color:var(--muted);line-height:1.7;margin:10px 0 0">
+          On est là quand ça gagne, on est là quand c’est dur. On est là parce qu’on aime.
+          Parce que l’OM, c’est une passion : une voix, un peuple, un battement.
+          Et tant qu’il y aura le bleu et le blanc, il y aura la fierté.
+        </p>
       </div>
     </section>
 
@@ -616,19 +370,15 @@
   </main>
 
   <script>
-    // ===== Smooth reveal on scroll =====
+    // ===== Reveal =====
     const reveals = document.querySelectorAll('.reveal');
     const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting) e.target.classList.add('visible');
-      });
+      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.12 });
     reveals.forEach(el => io.observe(el));
 
-    // ===== 3D Tilt effect (no library) =====
+    // ===== Tilt (cards/wrappers) + glow follow =====
     const tiltEls = document.querySelectorAll('[data-tilt]');
-    const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
-
     tiltEls.forEach(el => {
       el.addEventListener('mousemove', (ev) => {
         const r = el.getBoundingClientRect();
@@ -637,19 +387,13 @@
         const px = x / r.width;
         const py = y / r.height;
 
-        // glow follow
         el.style.setProperty('--mx', (px * 100).toFixed(2) + '%');
         el.style.setProperty('--my', (py * 100).toFixed(2) + '%');
 
-        // tilt
-        const rotY = (px - 0.5) * 14;      // left/right
-        const rotX = (0.5 - py) * 12;      // up/down
-        const lift = 6;
-
-        el.style.transform =
-          `translateY(-${lift}px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
+        const rotY = (px - 0.5) * 10;
+        const rotX = (0.5 - py) * 8;
+        el.style.transform = `translateY(-4px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
       });
-
       el.addEventListener('mouseleave', () => {
         el.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
         el.style.setProperty('--mx', '50%');
@@ -657,20 +401,213 @@
       });
     });
 
-    // Bonus: subtle parallax on hero showcase image
-    const showcase = document.querySelector('.showcase');
-    const showImg = document.querySelector('.showImg');
-    if (showcase && showImg) {
-      showcase.addEventListener('mousemove', (ev) => {
-        const r = showcase.getBoundingClientRect();
-        const dx = (ev.clientX - (r.left + r.width/2)) / r.width;
-        const dy = (ev.clientY - (r.top + r.height/2)) / r.height;
-        showImg.style.transform = `translateZ(-30px) scale(1.08) translate(${(dx*10).toFixed(2)}px, ${(dy*10).toFixed(2)}px)`;
+    // ===== 3D Coverflow Carousel =====
+    const slidesData = [
+      {
+        title: "Le Vélodrome qui gronde",
+        tag: "Ambiance",
+        url: "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1600&q=80"
+      },
+      {
+        title: "La ville et la mer",
+        tag: "Marseille",
+        url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=80"
+      },
+      {
+        title: "Les soirs de match",
+        tag: "Frissons",
+        url: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1600&q=80"
+      },
+      {
+        title: "La ferveur en tribune",
+        tag: "Chants",
+        url: "https://images.unsplash.com/photo-1508098682722-e99c643e7f2b?auto=format&fit=crop&w=1600&q=80"
+      },
+      {
+        title: "Bleu & blanc",
+        tag: "Fierté",
+        url: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1600&q=80"
+      },
+      {
+        title: "Le collectif",
+        tag: "Équipe",
+        url: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80"
+      }
+    ];
+
+    const track = document.getElementById('track');
+    let index = 0;
+    let isDown = false;
+    let startX = 0;
+    let dragDX = 0;
+    let autoplayTimer = null;
+
+    // Build slides
+    const slideEls = slidesData.map((s, i) => {
+      const el = document.createElement('div');
+      el.className = 'slide';
+      el.setAttribute('role', 'group');
+      el.setAttribute('aria-label', `${i+1} sur ${slidesData.length}`);
+
+      el.innerHTML = `
+        <div class="slideImg" style="background-image:url('${s.url}')"></div>
+        <div class="glow" aria-hidden="true"></div>
+        <div class="slideCap">
+          <strong>${s.title}</strong>
+          <span class="pill">${s.tag}</span>
+        </div>
+      `;
+      // glow follow
+      el.addEventListener('mousemove', (ev) => {
+        const r = el.getBoundingClientRect();
+        const x = ev.clientX - r.left;
+        const y = ev.clientY - r.top;
+        el.style.setProperty('--mx', (x / r.width * 100).toFixed(2) + '%');
+        el.style.setProperty('--my', (y / r.height * 100).toFixed(2) + '%');
       });
-      showcase.addEventListener('mouseleave', () => {
-        showImg.style.transform = 'translateZ(-30px) scale(1.08)';
+      el.addEventListener('mouseleave', () => {
+        el.style.setProperty('--mx', '50%');
+        el.style.setProperty('--my', '30%');
+      });
+
+      track.appendChild(el);
+      return el;
+    });
+
+    function wrap(n, len){
+      // keep in [-inf, inf] but used for distance mapping
+      return ((n % len) + len) % len;
+    }
+
+    function render(){
+      const len = slideEls.length;
+
+      slideEls.forEach((el, i) => {
+        // distance from current index in circular space
+        let d = i - index;
+        // choose the shortest direction around the circle
+        if (d >  len/2) d -= len;
+        if (d < -len/2) d += len;
+
+        // Add drag influence (smooth during drag)
+        const dragInfluence = dragDX / 220; // tweak feel
+        const dd = d - dragInfluence;
+
+        const abs = Math.abs(dd);
+        const isCenter = abs < 0.5;
+
+        const rotateY = dd * -26;         // degrees
+        const translateX = dd * 160;      // px
+        const translateZ = 320 - abs * 180; // depth
+        const scale = 1 - abs * 0.10;
+        const opacity = 1 - abs * 0.18;
+
+        el.style.opacity = Math.max(0.25, opacity).toFixed(2);
+        el.style.transform = `
+          translate(-50%, -50%)
+          translateX(${translateX}px)
+          translateZ(${translateZ}px)
+          rotateY(${rotateY}deg)
+          scale(${Math.max(0.76, scale).toFixed(3)})
+        `;
+
+        el.style.filter = `blur(${Math.min(2.2, abs*0.55).toFixed(2)}px)`;
+        el.style.zIndex = String(1000 - Math.round(abs*10));
+
+        // cursor and a subtle border emphasis on center slide
+        el.style.borderColor = isCenter ? 'rgba(46,230,255,.35)' : 'rgba(255,255,255,.14)';
       });
     }
+
+    function go(nextIndex){
+      const len = slideEls.length;
+      index = wrap(nextIndex, len);
+      render();
+    }
+
+    function next(){ go(index + 1); }
+    function prev(){ go(index - 1); }
+
+    // Buttons
+    document.getElementById('next').addEventListener('click', next);
+    document.getElementById('prev').addEventListener('click', prev);
+    document.getElementById('random').addEventListener('click', () => {
+      const len = slideEls.length;
+      let r = Math.floor(Math.random() * len);
+      if (r === index) r = (r + 1) % len;
+      go(r);
+    });
+
+    // Autoplay toggle
+    const autoplay = document.getElementById('autoplay');
+    function startAutoplay(){
+      stopAutoplay();
+      autoplayTimer = setInterval(() => {
+        if (!isDown) next();
+      }, 2600);
+    }
+    function stopAutoplay(){
+      if (autoplayTimer) clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+    autoplay.addEventListener('change', () => {
+      autoplay.checked ? startAutoplay() : stopAutoplay();
+    });
+
+    // Drag / Swipe
+    const carousel = document.querySelector('.carousel');
+
+    function pointerDown(clientX){
+      isDown = true;
+      startX = clientX;
+      dragDX = 0;
+      stopAutoplay();
+    }
+    function pointerMove(clientX){
+      if(!isDown) return;
+      dragDX = clientX - startX;
+      render();
+    }
+    function pointerUp(){
+      if(!isDown) return;
+      isDown = false;
+
+      // snap to nearest
+      const threshold = 60;
+      if (dragDX > threshold) prev();
+      else if (dragDX < -threshold) next();
+      else render();
+
+      dragDX = 0;
+
+      if (autoplay.checked) startAutoplay();
+    }
+
+    // Mouse
+    carousel.addEventListener('mousedown', (e) => pointerDown(e.clientX));
+    window.addEventListener('mousemove', (e) => pointerMove(e.clientX));
+    window.addEventListener('mouseup', pointerUp);
+
+    // Touch
+    carousel.addEventListener('touchstart', (e) => pointerDown(e.touches[0].clientX), {passive:true});
+    carousel.addEventListener('touchmove', (e) => pointerMove(e.touches[0].clientX), {passive:true});
+    carousel.addEventListener('touchend', pointerUp);
+
+    // Keyboard
+    window.addEventListener('keydown', (e)=>{
+      if(e.key === 'ArrowRight') next();
+      if(e.key === 'ArrowLeft') prev();
+    });
+
+    // Initial
+    render();
+    startAutoplay();
+
+    // Pause autoplay when tab not visible (clean)
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden) stopAutoplay();
+      else if(autoplay.checked) startAutoplay();
+    });
   </script>
 </body>
 </html>
