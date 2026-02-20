@@ -1,632 +1,676 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olympique de Marseille - Droit au But</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OM — Une Passion</title>
+  <meta name="description" content="Site fan OM : l'OM est une passion, avec effets 3D, cartes et images." />
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-            background: #0a0a0a;
-            color: #fff;
-        }
+  <style>
+    :root{
+      --bg: #050914;
+      --bg2:#070b1a;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.10);
+      --stroke: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --blue:#00b3ff;
+      --cyan:#2ee6ff;
+      --gold:#ffcc66;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+    }
 
-        /* Header */
-        header {
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid #2faee0;
-        }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue";
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% 10%, rgba(0,179,255,.22), transparent 60%),
+        radial-gradient(900px 600px at 80% 30%, rgba(255,204,102,.12), transparent 60%),
+        radial-gradient(1000px 700px at 70% 90%, rgba(46,230,255,.12), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+    }
 
-        nav {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-        }
+    /* ======= Background "stadium lights" ======= */
+    .lights{
+      position:fixed; inset:0;
+      pointer-events:none;
+      filter: blur(40px) saturate(120%);
+      opacity:.65;
+      z-index:-1;
+    }
+    .lights::before, .lights::after{
+      content:"";
+      position:absolute; inset:-40px;
+      background:
+        conic-gradient(from 210deg at 50% 50%,
+          rgba(0,179,255,.0),
+          rgba(0,179,255,.28),
+          rgba(255,204,102,.18),
+          rgba(46,230,255,.22),
+          rgba(0,179,255,.0)
+        );
+      animation: spin 16s linear infinite;
+      transform-origin:center;
+    }
+    .lights::after{
+      animation-duration: 26s;
+      opacity:.55;
+      mix-blend-mode: screen;
+    }
+    @keyframes spin{ to{ transform:rotate(360deg);} }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #2faee0 0%, #fff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 2px;
-        }
+    /* ======= Layout ======= */
+    header{
+      position:sticky;
+      top:0;
+      backdrop-filter: blur(14px);
+      background: rgba(5,9,20,.55);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      z-index:50;
+    }
+    .wrap{
+      width:min(1100px, 92vw);
+      margin:0 auto;
+    }
+    .nav{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 0;
+      gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      text-decoration:none; color:var(--text);
+      user-select:none;
+    }
+    .logo{
+      width:42px; height:42px;
+      border-radius:14px;
+      background:
+        linear-gradient(135deg, rgba(0,179,255,.95), rgba(46,230,255,.55));
+      box-shadow: 0 10px 24px rgba(0,179,255,.22);
+      position:relative;
+      transform: translateZ(0);
+    }
+    .logo::after{
+      content:"";
+      position:absolute; inset:2px;
+      border-radius:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,0));
+      border:1px solid rgba(255,255,255,.18);
+    }
+    .brand strong{ letter-spacing:.4px; }
+    .brand small{ display:block; color:var(--muted); font-weight:500; margin-top:2px; }
 
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-        }
+    .links{
+      display:flex; gap:10px; flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .links a{
+      color:var(--muted);
+      text-decoration:none;
+      font-weight:600;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+    .links a:hover{
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.14);
+      color: var(--text);
+    }
 
-        .nav-links a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            position: relative;
-        }
+    /* ======= Hero ======= */
+    .hero{
+      padding:64px 0 28px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:26px;
+      align-items:center;
+    }
+    @media (max-width: 900px){
+      .hero{ grid-template-columns: 1fr; padding-top:44px; }
+    }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #2faee0;
-            transition: width 0.3s ease;
-        }
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:.3px;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--cyan));
+      box-shadow: 0 0 18px rgba(46,230,255,.45);
+    }
 
-        .nav-links a:hover::after {
-            width: 100%;
-        }
+    h1{
+      font-size: clamp(34px, 4vw, 56px);
+      line-height:1.02;
+      margin:16px 0 10px;
+      letter-spacing:-0.5px;
+    }
+    .lead{
+      color:var(--muted);
+      font-size: clamp(16px, 1.35vw, 18px);
+      line-height:1.6;
+      margin: 0 0 18px;
+    }
+    .ctaRow{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top: 16px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+      letter-spacing:.2px;
+      box-shadow: 0 12px 34px rgba(0,0,0,.25);
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+      will-change: transform;
+    }
+    .btn:hover{ transform: translateY(-2px); background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.20); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(0,179,255,.90), rgba(46,230,255,.45));
+      border-color: rgba(46,230,255,.38);
+    }
+    .btn.primary:hover{ transform: translateY(-2px) scale(1.01); }
+    .btn .icon{
+      width:24px; height:24px;
+      border-radius:10px;
+      background: rgba(255,255,255,.18);
+      display:grid; place-items:center;
+      border:1px solid rgba(255,255,255,.18);
+    }
 
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #2faee0 100%);
-            overflow: hidden;
-        }
+    /* ======= 3D Showcase card ======= */
+    .tiltStage{
+      perspective: 1000px;
+      position:relative;
+    }
+    .showcase{
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
+      position:relative;
+      min-height: 380px;
+    }
+    .showcase::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(500px 220px at 15% 15%, rgba(46,230,255,.20), transparent 60%),
+        radial-gradient(500px 260px at 85% 35%, rgba(255,204,102,.14), transparent 60%);
+      pointer-events:none;
+    }
+    .showImg{
+      position:absolute; inset:0;
+      background-image:
+        linear-gradient(180deg, rgba(5,9,20,.0), rgba(5,9,20,.55)),
+        url("https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1400&q=80");
+      background-size: cover;
+      background-position: center;
+      filter: contrast(1.05) saturate(1.05);
+      transform: translateZ(-30px) scale(1.08);
+    }
+    .showContent{
+      position:absolute; inset:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      padding:22px;
+      transform: translateZ(30px);
+    }
+    .badgeRow{
+      display:flex; gap:8px; flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .badge{
+      padding:8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(5,9,20,.45);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,.85);
+      font-weight:800;
+      font-size: 12px;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+    }
+    .showTitle{
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: .2px;
+      margin:0 0 6px;
+      text-shadow: 0 12px 40px rgba(0,0,0,.55);
+    }
+    .showText{
+      margin:0;
+      color: rgba(255,255,255,.78);
+      line-height:1.5;
+      text-shadow: 0 12px 40px rgba(0,0,0,.55);
+      max-width: 48ch;
+    }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            width: 150%;
-            height: 150%;
-            background: radial-gradient(circle, rgba(47, 174, 224, 0.1) 0%, transparent 70%);
-            animation: pulse 8s ease-in-out infinite;
-        }
+    /* ======= Sections ======= */
+    section{
+      padding: 26px 0;
+    }
+    .sectionTitle{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:16px;
+      margin: 8px 0 14px;
+    }
+    .sectionTitle h2{
+      margin:0;
+      font-size: 22px;
+      letter-spacing: .2px;
+    }
+    .sectionTitle p{
+      margin:0;
+      color: var(--muted);
+      max-width: 56ch;
+    }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 0.8; }
-        }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:14px;
+    }
+    .card{
+      grid-column: span 4;
+      border-radius: 22px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 14px 44px rgba(0,0,0,.35);
+      overflow:hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
+      position:relative;
+    }
+    @media (max-width: 980px){ .card{ grid-column: span 6; } }
+    @media (max-width: 640px){ .card{ grid-column: span 12; } }
 
-        .hero-content {
-            text-align: center;
-            z-index: 10;
-            padding: 0 2rem;
-        }
+    .card .img{
+      height: 160px;
+      background-size: cover;
+      background-position:center;
+      filter: saturate(1.05) contrast(1.02);
+      transform: translateZ(-18px) scale(1.06);
+    }
+    .card .body{
+      padding: 14px 14px 16px;
+      transform: translateZ(18px);
+    }
+    .card h3{
+      margin: 0 0 6px;
+      font-size: 16px;
+      letter-spacing:.2px;
+    }
+    .card p{
+      margin:0;
+      color: var(--muted);
+      line-height:1.55;
+      font-size: 14px;
+    }
 
-        .hero h1 {
-            font-size: 5rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff 0%, #2faee0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: slideUp 1s ease-out;
-        }
+    /* 3D glow following mouse */
+    .glow{
+      position:absolute;
+      inset:-120px;
+      background: radial-gradient(220px 180px at var(--mx, 50%) var(--my, 30%), rgba(46,230,255,.22), transparent 60%);
+      opacity:.0;
+      transition: opacity .2s ease;
+      pointer-events:none;
+      mix-blend-mode: screen;
+    }
+    .card:hover .glow, .showcase:hover .glow{ opacity: .9; }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    /* ======= Quote banner ======= */
+    .banner{
+      border-radius: 26px;
+      padding: 18px 18px;
+      background:
+        radial-gradient(800px 240px at 20% 30%, rgba(0,179,255,.22), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      overflow:hidden;
+      position:relative;
+    }
+    .banner::after{
+      content:"";
+      position:absolute;
+      width: 220px; height: 220px;
+      right: -80px; top: -110px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,204,102,.30), transparent 60%);
+      filter: blur(10px);
+    }
+    .banner strong{
+      display:block;
+      font-size: 18px;
+      letter-spacing:.2px;
+    }
+    .banner span{ color: var(--muted); display:block; margin-top:4px; }
 
-        .hero p {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            color: #ddd;
-            animation: slideUp 1s ease-out 0.2s backwards;
-        }
+    /* ======= Footer ======= */
+    footer{
+      padding: 30px 0 44px;
+      color: rgba(255,255,255,.62);
+      text-align:center;
+    }
+    footer a{ color: rgba(46,230,255,.9); text-decoration:none; font-weight:800; }
 
-        .cta-button {
-            display: inline-block;
-            padding: 1rem 3rem;
-            background: linear-gradient(135deg, #2faee0 0%, #1a8fb8 100%);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(47, 174, 224, 0.4);
-            animation: slideUp 1s ease-out 0.4s backwards;
-        }
+    /* ======= Smooth reveal ======= */
+    .reveal{
+      opacity:0;
+      transform: translateY(14px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible{
+      opacity:1;
+      transform: translateY(0);
+    }
 
-        .cta-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(47, 174, 224, 0.6);
-        }
-
-        /* Stats Section */
-        .stats {
-            padding: 5rem 2rem;
-            background: #0f0f0f;
-        }
-
-        .stats-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-radius: 20px;
-            border: 1px solid rgba(47, 174, 224, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-10px);
-            border-color: #2faee0;
-            box-shadow: 0 20px 40px rgba(47, 174, 224, 0.3);
-        }
-
-        .stat-number {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: #2faee0;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 1.1rem;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* News Section */
-        .news {
-            padding: 5rem 2rem;
-            background: #0a0a0a;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 3rem;
-            background: linear-gradient(135deg, #2faee0 0%, #fff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .news-grid {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-
-        .news-card {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(47, 174, 224, 0.1);
-        }
-
-        .news-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(47, 174, 224, 0.4);
-            border-color: #2faee0;
-        }
-
-        .news-image {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(135deg, #2faee0 0%, #1a8fb8 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-        }
-
-        .news-content {
-            padding: 2rem;
-        }
-
-        .news-date {
-            color: #2faee0;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .news-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #fff;
-        }
-
-        .news-excerpt {
-            color: #aaa;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .read-more {
-            color: #2faee0;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .read-more:hover {
-            gap: 1rem;
-        }
-
-        /* Team Section */
-        .team {
-            padding: 5rem 2rem;
-            background: #0f0f0f;
-        }
-
-        .team-grid {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-
-        .player-card {
-            text-align: center;
-            padding: 2rem 1rem;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(47, 174, 224, 0.1);
-        }
-
-        .player-card:hover {
-            transform: translateY(-10px) scale(1.05);
-            border-color: #2faee0;
-            box-shadow: 0 20px 40px rgba(47, 174, 224, 0.4);
-        }
-
-        .player-number {
-            font-size: 3rem;
-            font-weight: 900;
-            color: #2faee0;
-            margin-bottom: 0.5rem;
-        }
-
-        .player-name {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .player-position {
-            color: #888;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Footer */
-        footer {
-            background: #0a0a0a;
-            padding: 3rem 2rem;
-            border-top: 2px solid #2faee0;
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-        }
-
-        .footer-section h3 {
-            color: #2faee0;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .footer-section ul {
-            list-style: none;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-section a {
-            color: #aaa;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-section a:hover {
-            color: #2faee0;
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #2faee0 0%, #1a8fb8 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .social-icon:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(47, 174, 224, 0.4);
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(47, 174, 224, 0.2);
-            color: #666;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-
-            .hero p {
-                font-size: 1.2rem;
-            }
-
-            .nav-links {
-                gap: 1.5rem;
-                flex-direction: column;
-                display: none;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .news-grid,
-            .team-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    /* ======= Little separator ======= */
+    .hr{
+      height:1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+      margin: 18px 0;
+    }
+  </style>
 </head>
+
 <body>
-    <!-- Header -->
-    <header>
-        <nav>
-            <div class="logo">OM</div>
-            <ul class="nav-links">
-                <li><a href="#accueil">Accueil</a></li>
-                <li><a href="#actualites">Actualités</a></li>
-                <li><a href="#equipe">Équipe</a></li>
-                <li><a href="#stade">Stade</a></li>
-                <li><a href="#billetterie">Billetterie</a></li>
-            </ul>
-        </nav>
-    </header>
+  <div class="lights"></div>
 
-    <!-- Hero Section -->
-    <section class="hero" id="accueil">
-        <div class="hero-content">
-            <h1>DROIT AU BUT</h1>
-            <p>L'Olympique de Marseille, plus qu'un club, une passion</p>
-            <a href="#billetterie" class="cta-button">Réserver mes places</a>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <strong>OM — Une Passion</strong>
+          <small>Bleu & Blanc • Ferveur • Frissons</small>
         </div>
+      </a>
+
+      <nav class="links">
+        <a href="#passion">Passion</a>
+        <a href="#moments">Moments</a>
+        <a href="#galerie">Galerie</a>
+        <a href="#chants">Chants</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="wrap">
+    <section class="hero">
+      <div class="reveal">
+        <div class="kicker"><span class="dot"></span> Ici, l’OM n’est pas un club : c’est une émotion.</div>
+        <h1>L’OM, c’est la passion qui te suit partout.</h1>
+        <p class="lead">
+          Des soirs de match au Vieux-Port, des frissons au coup d’envoi, et cette fierté bleu & blanc
+          qui ne s’éteint jamais. Bienvenue sur une page qui sent le stade, la mer et la ferveur.
+        </p>
+
+        <div class="ctaRow">
+          <a class="btn primary" href="#moments">
+            <span class="icon">⚡</span>
+            Voir les moments
+          </a>
+          <a class="btn" href="#galerie">
+            <span class="icon">📸</span>
+            Galerie 3D
+          </a>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="banner reveal" style="transition-delay:.08s">
+          <div>
+            <strong>“À Marseille, le football est une histoire de cœur.”</strong>
+            <span>Et l’OM, c’est le cœur qui bat plus fort.</span>
+          </div>
+          <div style="font-weight:900; color: rgba(255,255,255,.85);">💙⚪</div>
+        </div>
+      </div>
+
+      <div class="tiltStage reveal" style="transition-delay:.12s">
+        <article class="showcase tilt" data-tilt>
+          <div class="glow" aria-hidden="true"></div>
+          <div class="showImg" aria-hidden="true"></div>
+          <div class="showContent">
+            <div class="badgeRow">
+              <span class="badge">Ferveur</span>
+              <span class="badge">Bleu & Blanc</span>
+              <span class="badge">Vélodrome</span>
+            </div>
+            <h3 class="showTitle">Le Vélodrome : un rugissement.</h3>
+            <p class="showText">
+              Quand la tribune s’allume et que la ville vibre, on comprend : l’OM, c’est plus grand que 90 minutes.
+            </p>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats">
-        <div class="stats-container">
-            <div class="stat-card">
-                <div class="stat-number">1899</div>
-                <div class="stat-label">Année de création</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">10</div>
-                <div class="stat-label">Championnats</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">1</div>
-                <div class="stat-label">Ligue des Champions</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">67,000</div>
-                <div class="stat-label">Capacité Orange Vélodrome</div>
-            </div>
-        </div>
+    <section id="passion" class="reveal">
+      <div class="sectionTitle">
+        <h2>La passion en 3 mots</h2>
+        <p>Une ambiance, une identité, un amour qui ne s’explique pas… il se vit.</p>
+      </div>
+
+      <div class="grid">
+        <article class="card tilt" data-tilt>
+          <div class="glow" aria-hidden="true"></div>
+          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1520975958225-0e2f18d1f431?auto=format&fit=crop&w=1200&q=80')"></div>
+          <div class="body">
+            <h3>Ferveur</h3>
+            <p>Des frissons dans le dos, la peau qui se hérisse : ici on chante, on pousse, on y croit.</p>
+          </div>
+        </article>
+
+        <article class="card tilt" data-tilt>
+          <div class="glow" aria-hidden="true"></div>
+          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1471295253337-3ceaaedca402?auto=format&fit=crop&w=1200&q=80')"></div>
+          <div class="body">
+            <h3>Identité</h3>
+            <p>Marseille, la mer, le bruit, la lumière : une ville entière dans un maillot.</p>
+          </div>
+        </article>
+
+        <article class="card tilt" data-tilt>
+          <div class="glow" aria-hidden="true"></div>
+          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80')"></div>
+          <div class="body">
+            <h3>Fidélité</h3>
+            <p>Dans les hauts comme dans les bas : l’OM reste. Toujours. Parce que c’est une passion.</p>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <!-- News Section -->
-    <section class="news" id="actualites">
-        <h2 class="section-title">Dernières Actualités</h2>
-        <div class="news-grid">
-            <div class="news-card">
-                <div class="news-image">⚽</div>
-                <div class="news-content">
-                    <div class="news-date">15 Février 2026</div>
-                    <h3 class="news-title">Victoire éclatante au Vélodrome</h3>
-                    <p class="news-excerpt">L'OM s'impose 3-0 face à son adversaire dans une ambiance électrique. Les supporters ont une fois de plus répondu présent.</p>
-                    <a href="#" class="read-more">Lire la suite →</a>
-                </div>
-            </div>
-            <div class="news-card">
-                <div class="news-image">🏆</div>
-                <div class="news-content">
-                    <div class="news-date">12 Février 2026</div>
-                    <h3 class="news-title">Préparation intensive avant le derby</h3>
-                    <p class="news-excerpt">L'équipe se prépare avec détermination pour le prochain match crucial du championnat.</p>
-                    <a href="#" class="read-more">Lire la suite →</a>
-                </div>
-            </div>
-            <div class="news-card">
-                <div class="news-image">👕</div>
-                <div class="news-content">
-                    <div class="news-date">10 Février 2026</div>
-                    <h3 class="news-title">Nouvelle collection disponible</h3>
-                    <p class="news-excerpt">Découvrez la nouvelle collection officielle OM avec des designs exclusifs pour les vrais supporters.</p>
-                    <a href="#" class="read-more">Lire la suite →</a>
-                </div>
-            </div>
-        </div>
+    <section id="moments" class="reveal">
+      <div class="sectionTitle">
+        <h2>Moments qui collent à la mémoire</h2>
+        <p>Des soirs de match, des retournements, des émotions… et ce sentiment : “on l’a vécu ensemble”.</p>
+      </div>
+
+      <div class="grid">
+        <article class="card tilt" data-tilt style="grid-column: span 7;">
+          <div class="glow" aria-hidden="true"></div>
+          <div class="img" style="height:220px;background-image:url('https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1400&q=80')"></div>
+          <div class="body">
+            <h3>Le coup d’envoi</h3>
+            <p>Le stade gronde, les drapeaux bougent, et tout le monde se lève : ça commence.</p>
+          </div>
+        </article>
+
+        <article class="card tilt" data-tilt style="grid-column: span 5;">
+          <div class="glow" aria-hidden="true"></div>
+          <div class="img" style="height:220px;background-image:url('https://images.unsplash.com/photo-1508098682722-e99c643e7f2b?auto=format&fit=crop&w=1400&q=80')"></div>
+          <div class="body">
+            <h3>Le but</h3>
+            <p>Une seconde de silence… puis l’explosion. Les bras en l’air, le cœur en sprint.</p>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <!-- Team Section -->
-    <section class="team" id="equipe">
-        <h2 class="section-title">Notre Équipe</h2>
-        <div class="team-grid">
-            <div class="player-card">
-                <div class="player-number">10</div>
-                <div class="player-name">CAPITAINE</div>
-                <div class="player-position">Milieu</div>
-            </div>
-            <div class="player-card">
-                <div class="player-number">9</div>
-                <div class="player-name">ATTAQUANT</div>
-                <div class="player-position">Avant-centre</div>
-            </div>
-            <div class="player-card">
-                <div class="player-number">7</div>
-                <div class="player-name">AILIER</div>
-                <div class="player-position">Ailier droit</div>
-            </div>
-            <div class="player-card">
-                <div class="player-number">4</div>
-                <div class="player-name">DÉFENSEUR</div>
-                <div class="player-position">Défense centrale</div>
-            </div>
-            <div class="player-card">
-                <div class="player-number">1</div>
-                <div class="player-name">GARDIEN</div>
-                <div class="player-position">Gardien de but</div>
-            </div>
-            <div class="player-card">
-                <div class="player-number">11</div>
-                <div class="player-name">MILIEU</div>
-                <div class="player-position">Milieu offensif</div>
-            </div>
-        </div>
+    <section id="galerie" class="reveal">
+      <div class="sectionTitle">
+        <h2>Galerie “effet 3D”</h2>
+        <p>Passe ta souris sur les cartes : elles se penchent et la lumière suit ton mouvement.</p>
+      </div>
+
+      <div class="grid">
+        <article class="card tilt" data-tilt>
+          <div class="glow"></div>
+          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80')"></div>
+          <div class="body">
+            <h3>Ambiance</h3>
+            <p>Le stade, la foule, les chants : une énergie impossible à copier.</p>
+          </div>
+        </article>
+
+        <article class="card tilt" data-tilt>
+          <div class="glow"></div>
+          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80')"></div>
+          <div class="body">
+            <h3>Collectif</h3>
+            <p>Une équipe, une ville, une même rage de vaincre.</p>
+          </div>
+        </article>
+
+        <article class="card tilt" data-tilt>
+          <div class="glow"></div>
+          <div class="img" style="background-image:url('https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1200&q=80')"></div>
+          <div class="body">
+            <h3>Fierté</h3>
+            <p>Bleu & blanc, toujours. Ce n’est pas qu’un look : c’est un drapeau.</p>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Olympique de Marseille</h3>
-                <p style="color: #aaa; line-height: 1.6;">Le club le plus titré de France avec une histoire légendaire et des supporters passionnés.</p>
-                <div class="social-icons">
-                    <a href="#" class="social-icon">📘</a>
-                    <a href="#" class="social-icon">🐦</a>
-                    <a href="#" class="social-icon">📸</a>
-                    <a href="#" class="social-icon">▶️</a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h3>Liens Rapides</h3>
-                <ul>
-                    <li><a href="#actualites">Actualités</a></li>
-                    <li><a href="#equipe">Équipe</a></li>
-                    <li><a href="#billetterie">Billetterie</a></li>
-                    <li><a href="#boutique">Boutique</a></li>
-                    <li><a href="#histoire">Histoire du club</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <ul>
-                    <li><a href="#">📍 Orange Vélodrome, Marseille</a></li>
-                    <li><a href="#">📞 +33 4 91 00 00 00</a></li>
-                    <li><a href="#">✉️ contact@om.fr</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Newsletter</h3>
-                <p style="color: #aaa; margin-bottom: 1rem;">Restez informé des dernières nouvelles</p>
-                <input type="email" placeholder="Votre email" style="width: 100%; padding: 0.8rem; background: rgba(47, 174, 224, 0.1); border: 1px solid #2faee0; border-radius: 5px; color: #fff; margin-bottom: 1rem;">
-                <button style="width: 100%; padding: 0.8rem; background: linear-gradient(135deg, #2faee0 0%, #1a8fb8 100%); border: none; border-radius: 5px; color: #fff; font-weight: 600; cursor: pointer;">S'abonner</button>
-            </div>
+    <section id="chants" class="reveal">
+      <div class="sectionTitle">
+        <h2>Chants & promesse</h2>
+        <p>Un petit texte “tribune” pour ton site. Tu peux le modifier comme tu veux.</p>
+      </div>
+
+      <div class="banner" style="align-items:flex-start;">
+        <div style="max-width:70ch;">
+          <strong>On est là.</strong>
+          <span style="margin-top:10px; display:block; line-height:1.65;">
+            On est là quand ça gagne, on est là quand c’est dur. On est là parce qu’on aime.
+            Parce que l’OM, c’est une passion : une voix, un peuple, un battement.
+            Et tant qu’il y aura le bleu et le blanc, il y aura la fierté.
+          </span>
         </div>
-        <div class="copyright">
-            <p>&copy; 2026 Olympique de Marseille. Tous droits réservés. Droit au But.</p>
-        </div>
+        <a class="btn" href="#top" style="white-space:nowrap;">
+          <span class="icon">⬆️</span>
+          Retour haut
+        </a>
+      </div>
+    </section>
+
+    <footer class="reveal">
+      <div class="hr"></div>
+      <p>Site fan non officiel • Fait avec 💙⚪ • Images : Unsplash</p>
     </footer>
+  </main>
 
-    <script>
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
+  <script>
+    // ===== Smooth reveal on scroll =====
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting) e.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => io.observe(el));
 
-        // Animate on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
+    // ===== 3D Tilt effect (no library) =====
+    const tiltEls = document.querySelectorAll('[data-tilt]');
+    const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
+    tiltEls.forEach(el => {
+      el.addEventListener('mousemove', (ev) => {
+        const r = el.getBoundingClientRect();
+        const x = ev.clientX - r.left;
+        const y = ev.clientY - r.top;
+        const px = x / r.width;
+        const py = y / r.height;
 
-        document.querySelectorAll('.stat-card, .news-card, .player-card').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.6s ease';
-            observer.observe(el);
-        });
-    </script>
+        // glow follow
+        el.style.setProperty('--mx', (px * 100).toFixed(2) + '%');
+        el.style.setProperty('--my', (py * 100).toFixed(2) + '%');
+
+        // tilt
+        const rotY = (px - 0.5) * 14;      // left/right
+        const rotX = (0.5 - py) * 12;      // up/down
+        const lift = 6;
+
+        el.style.transform =
+          `translateY(-${lift}px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
+      });
+
+      el.addEventListener('mouseleave', () => {
+        el.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
+        el.style.setProperty('--mx', '50%');
+        el.style.setProperty('--my', '30%');
+      });
+    });
+
+    // Bonus: subtle parallax on hero showcase image
+    const showcase = document.querySelector('.showcase');
+    const showImg = document.querySelector('.showImg');
+    if (showcase && showImg) {
+      showcase.addEventListener('mousemove', (ev) => {
+        const r = showcase.getBoundingClientRect();
+        const dx = (ev.clientX - (r.left + r.width/2)) / r.width;
+        const dy = (ev.clientY - (r.top + r.height/2)) / r.height;
+        showImg.style.transform = `translateZ(-30px) scale(1.08) translate(${(dx*10).toFixed(2)}px, ${(dy*10).toFixed(2)}px)`;
+      });
+      showcase.addEventListener('mouseleave', () => {
+        showImg.style.transform = 'translateZ(-30px) scale(1.08)';
+      });
+    }
+  </script>
 </body>
-</htm>
+</html>
