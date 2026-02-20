@@ -1,24 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>OM — Une Passion (Carrousel 3D)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OM — Une Passion (3D)</title>
   <style>
     :root{
       --bg:#050914; --bg2:#070b1a;
       --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.70);
-      --card:rgba(255,255,255,.06);
+      --muted:rgba(255,255,255,.72);
       --stroke:rgba(255,255,255,.14);
+      --glass:rgba(255,255,255,.06);
+      --glass2:rgba(255,255,255,.10);
       --blue:#00b3ff; --cyan:#2ee6ff; --gold:#ffcc66;
-      --shadow:0 18px 60px rgba(0,0,0,.55);
+      --shadow: 0 18px 70px rgba(0,0,0,.58);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       color:var(--text);
       background:
         radial-gradient(1200px 700px at 20% 10%, rgba(0,179,255,.22), transparent 60%),
@@ -27,140 +28,248 @@
         linear-gradient(180deg, var(--bg), var(--bg2));
       overflow-x:hidden;
     }
+
+    /* Stadium lights background */
     .lights{
-      position:fixed; inset:0; pointer-events:none; z-index:-1;
-      filter:blur(40px) saturate(120%); opacity:.65;
+      position:fixed; inset:0; pointer-events:none; z-index:-2;
+      filter: blur(40px) saturate(125%);
+      opacity:.68;
     }
     .lights::before,.lights::after{
       content:""; position:absolute; inset:-40px;
-      background:conic-gradient(from 210deg at 50% 50%,
-        rgba(0,179,255,0), rgba(0,179,255,.28),
-        rgba(255,204,102,.18), rgba(46,230,255,.22),
-        rgba(0,179,255,0));
-      animation:spin 16s linear infinite;
+      background:
+        conic-gradient(from 220deg at 50% 50%,
+          rgba(0,179,255,0),
+          rgba(0,179,255,.28),
+          rgba(255,204,102,.18),
+          rgba(46,230,255,.24),
+          rgba(0,179,255,0));
+      animation: spin 16s linear infinite;
     }
-    .lights::after{animation-duration:26s;opacity:.55;mix-blend-mode:screen}
-    @keyframes spin{to{transform:rotate(360deg)}}
+    .lights::after{
+      animation-duration: 28s;
+      opacity:.58;
+      mix-blend-mode: screen;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
+
+    /* subtle grain */
+    .grain{
+      position:fixed; inset:0; pointer-events:none; z-index:-1;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+      opacity:.07;
+      mix-blend-mode: overlay;
+    }
 
     header{
       position:sticky; top:0; z-index:50;
       backdrop-filter: blur(14px);
-      background: rgba(5,9,20,.55);
-      border-bottom:1px solid rgba(255,255,255,.08);
+      background: rgba(5,9,20,.56);
+      border-bottom: 1px solid rgba(255,255,255,.08);
     }
-    .wrap{width:min(1100px,92vw); margin:0 auto}
-    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0;gap:12px}
-    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);user-select:none}
+    .wrap{ width:min(1120px, 92vw); margin:0 auto; }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; padding:14px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      text-decoration:none; color:var(--text); user-select:none;
+    }
     .logo{
-      width:42px;height:42px;border-radius:14px;
-      background:linear-gradient(135deg, rgba(0,179,255,.95), rgba(46,230,255,.55));
-      box-shadow:0 10px 24px rgba(0,179,255,.22);
+      width:44px; height:44px; border-radius:16px;
+      background: linear-gradient(135deg, rgba(0,179,255,.95), rgba(46,230,255,.55));
+      box-shadow: 0 12px 28px rgba(0,179,255,.22);
+      border:1px solid rgba(255,255,255,.16);
       position:relative;
+      transform: translateZ(0);
     }
     .logo::after{
-      content:""; position:absolute; inset:2px; border-radius:12px;
-      background:linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,0));
-      border:1px solid rgba(255,255,255,.18);
+      content:""; position:absolute; inset:2px; border-radius:14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,0));
     }
-    .brand strong{letter-spacing:.4px}
-    .brand small{display:block;color:var(--muted);font-weight:500;margin-top:2px}
+    .brand strong{ letter-spacing:.4px; }
+    .brand small{ display:block; color:var(--muted); font-weight:600; margin-top:2px; }
 
-    .links{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .links{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
     .links a{
-      color:var(--muted);text-decoration:none;font-weight:700;
-      padding:10px 12px;border-radius:14px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.03);
-      transition:transform .18s ease, background .18s ease, border-color .18s ease;
+      color:var(--muted); text-decoration:none; font-weight:800;
+      padding:10px 12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
     }
     .links a:hover{
-      transform:translateY(-2px);
-      background:rgba(255,255,255,.06);
-      border-color:rgba(255,255,255,.14);
-      color:var(--text);
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.16);
+      color: var(--text);
     }
 
+    /* HERO */
     .hero{
-      padding:56px 0 18px;
+      padding: 56px 0 18px;
       display:grid;
       grid-template-columns: 1.1fr .9fr;
-      gap:26px;
+      gap: 26px;
       align-items:center;
     }
-    @media (max-width: 900px){ .hero{grid-template-columns:1fr; padding-top:44px} }
+    @media (max-width: 900px){ .hero{ grid-template-columns: 1fr; padding-top: 44px; } }
 
     .kicker{
-      display:inline-flex;align-items:center;gap:10px;
-      padding:10px 12px;border-radius:999px;
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      color:var(--muted);font-weight:800;letter-spacing:.3px;
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-weight:900; letter-spacing:.3px;
     }
     .dot{
-      width:10px;height:10px;border-radius:50%;
-      background:radial-gradient(circle at 30% 30%, #fff, var(--cyan));
-      box-shadow:0 0 18px rgba(46,230,255,.45);
+      width:10px; height:10px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--cyan));
+      box-shadow: 0 0 18px rgba(46,230,255,.45);
     }
-    h1{
-      font-size:clamp(34px,4vw,56px);
-      line-height:1.02;
-      margin:16px 0 10px;
-      letter-spacing:-.5px;
-    }
-    .lead{color:var(--muted);font-size:clamp(16px,1.35vw,18px);line-height:1.6;margin:0 0 14px}
 
-    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+    /* 3D text */
+    h1{
+      margin:16px 0 10px;
+      font-size: clamp(34px, 4vw, 58px);
+      line-height: 1.02;
+      letter-spacing: -0.6px;
+      text-shadow:
+        0 2px 0 rgba(0,0,0,.35),
+        0 14px 40px rgba(0,0,0,.55);
+    }
+    .lead{
+      margin:0 0 14px;
+      color: var(--muted);
+      font-size: clamp(16px, 1.35vw, 18px);
+      line-height:1.65;
+    }
+
+    .ctaRow{ display:flex; gap:12px; flex-wrap:wrap; margin-top:16px; }
     .btn{
-      display:inline-flex;align-items:center;gap:10px;
-      padding:12px 14px;border-radius:16px;
+      display:inline-flex; align-items:center; gap:10px;
+      padding:12px 14px;
+      border-radius:16px;
       border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.06);
-      color:var(--text);text-decoration:none;font-weight:900;
-      box-shadow:0 12px 34px rgba(0,0,0,.25);
-      transition:transform .18s ease, background .18s ease, border-color .18s ease;
-      will-change:transform;
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      text-decoration:none;
+      font-weight:950;
+      box-shadow: 0 12px 34px rgba(0,0,0,.25);
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+      will-change: transform;
     }
-    .btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.20)}
+    .btn:hover{ transform: translateY(-2px); background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.20); }
     .btn.primary{
-      background:linear-gradient(135deg, rgba(0,179,255,.90), rgba(46,230,255,.45));
-      border-color:rgba(46,230,255,.38);
+      background: linear-gradient(135deg, rgba(0,179,255,.92), rgba(46,230,255,.45));
+      border-color: rgba(46,230,255,.38);
     }
-    .btn.primary:hover{transform:translateY(-2px) scale(1.01)}
+    .btn.primary:hover{ transform: translateY(-2px) scale(1.01); }
     .btn .icon{
-      width:24px;height:24px;border-radius:10px;
-      background:rgba(255,255,255,.18);
-      display:grid;place-items:center;
+      width:24px; height:24px; border-radius:10px;
+      background: rgba(255,255,255,.18);
+      display:grid; place-items:center;
       border:1px solid rgba(255,255,255,.18);
     }
-
-    section{padding: 26px 0}
-    .sectionTitle{
-      display:flex; align-items:flex-end; justify-content:space-between;
-      gap:16px; margin:8px 0 14px;
-    }
-    .sectionTitle h2{margin:0;font-size:22px}
-    .sectionTitle p{margin:0;color:var(--muted);max-width:60ch}
 
     .hr{
       height:1px;
-      background:linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
-      margin:18px 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+      margin: 18px 0;
     }
 
-    /* ===== Tilt cards + glow ===== */
-    .tiltStage{perspective: 1000px}
-    .tilt{ transform-style:preserve-3d; will-change:transform; position:relative; }
+    /* ===== Tilt / glow helpers ===== */
+    .tiltStage{ perspective: 1100px; }
+    .tilt{ transform-style: preserve-3d; will-change: transform; position:relative; }
     .glow{
-      position:absolute; inset:-120px;
-      background:radial-gradient(220px 180px at var(--mx,50%) var(--my,30%), rgba(46,230,255,.22), transparent 60%);
-      opacity:0; transition:opacity .2s ease;
-      pointer-events:none; mix-blend-mode:screen;
+      position:absolute; inset:-140px;
+      background: radial-gradient(260px 200px at var(--mx,50%) var(--my,30%), rgba(46,230,255,.22), transparent 60%);
+      opacity:0; transition: opacity .2s ease;
+      pointer-events:none; mix-blend-mode: screen;
     }
-    .tilt:hover .glow{opacity:.9}
+    .tilt:hover .glow{ opacity:.95; }
 
-    /* ===== 3D Carousel (Coverflow) ===== */
+    /* ===== Hero 3D panel (layered parallax) ===== */
+    .panel{
+      border-radius: 28px;
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      min-height: 420px;
+      position:relative;
+    }
+    .layer{
+      position:absolute; inset:0;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .layer.bg{
+      background:
+        radial-gradient(700px 260px at 20% 18%, rgba(46,230,255,.16), transparent 60%),
+        radial-gradient(700px 320px at 85% 30%, rgba(255,204,102,.12), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.45)),
+        url("https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1600&q=80");
+      background-size: cover;
+      background-position: center;
+      filter: contrast(1.05) saturate(1.06);
+      transform: translateZ(-50px) scale(1.10);
+    }
+    .layer.mid{
+      background:
+        radial-gradient(300px 200px at 30% 65%, rgba(0,179,255,.18), transparent 60%),
+        radial-gradient(260px 180px at 75% 25%, rgba(46,230,255,.18), transparent 60%);
+      transform: translateZ(-10px);
+      mix-blend-mode: screen;
+      opacity:.9;
+    }
+    .layer.fg{
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-end;
+      gap:10px;
+      padding:20px;
+      transform: translateZ(40px);
+    }
+    .badgeRow{ display:flex; gap:8px; flex-wrap:wrap; }
+    .badge{
+      padding:8px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(5,9,20,.46);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,.86);
+      font-weight:950;
+      font-size: 12px;
+      letter-spacing:.4px;
+      text-transform: uppercase;
+    }
+    .panelTitle{
+      margin:0;
+      font-size: 22px;
+      font-weight: 1000;
+      text-shadow: 0 16px 44px rgba(0,0,0,.65);
+    }
+    .panelText{
+      margin:0;
+      color: rgba(255,255,255,.78);
+      line-height:1.55;
+      max-width: 50ch;
+      text-shadow: 0 16px 44px rgba(0,0,0,.65);
+    }
+
+    section{ padding: 26px 0; }
+    .sectionTitle{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:16px; margin: 8px 0 14px;
+    }
+    .sectionTitle h2{ margin:0; font-size: 22px; letter-spacing:.2px; }
+    .sectionTitle p{ margin:0; color: var(--muted); max-width: 62ch; }
+
+    /* ===== 3D Carousel Cylinder ===== */
     .carouselWrap{
-      border-radius: 26px;
+      border-radius: 28px;
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
       border:1px solid rgba(255,255,255,.12);
       box-shadow: var(--shadow);
@@ -169,87 +278,91 @@
       position:relative;
     }
     .carouselHeader{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      margin-bottom: 10px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; margin-bottom: 12px;
     }
     .carouselHeader .hint{
-      color:var(--muted);
-      font-weight:700;
+      color: var(--muted);
+      font-weight:800;
       font-size: 13px;
     }
-    .carousel{
+
+    .carousel3d{
+      height: 420px;
+      perspective: 1400px;
       position:relative;
-      height: 360px;
-      perspective: 1200px;
       user-select:none;
       touch-action: pan-y;
     }
-    @media (max-width: 640px){
-      .carousel{ height: 320px; }
-    }
+    @media (max-width: 640px){ .carousel3d{ height: 380px; } }
 
-    .track{
+    .scene{
       position:absolute; inset:0;
-      transform-style: preserve-3d;
+      display:grid; place-items:center;
     }
+    .ring{
+      position:relative;
+      width: min(740px, 92vw);
+      height: 360px;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    @media (max-width: 640px){ .ring{ height: 320px; } }
 
-    .slide{
+    .card3d{
       position:absolute;
       left:50%; top:50%;
-      width: min(560px, 78vw);
-      height: 300px;
+      width: min(520px, 78vw);
+      height: 290px;
       transform-style: preserve-3d;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%,-50%);
       border-radius: 22px;
       overflow:hidden;
       border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.05);
+      background: rgba(255,255,255,.06);
       box-shadow: 0 22px 70px rgba(0,0,0,.55);
-      cursor: grab;
     }
-    .slide:active{ cursor: grabbing; }
-    .slide::after{
+    .card3d::after{
       content:"";
       position:absolute; inset:0;
-      background: linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.55));
+      background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.58));
       pointer-events:none;
     }
-
-    .slideImg{
+    .img3d{
       position:absolute; inset:0;
       background-size: cover;
       background-position:center;
-      transform: translateZ(-24px) scale(1.06);
-      filter:saturate(1.05) contrast(1.03);
+      transform: translateZ(-30px) scale(1.08);
+      filter: saturate(1.06) contrast(1.04);
     }
-
-    .slideCap{
-      position:absolute; left:16px; right:16px; bottom:14px;
-      transform: translateZ(30px);
+    .cap3d{
+      position:absolute;
+      left:16px; right:16px; bottom:14px;
+      transform: translateZ(40px);
       display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
     }
-    .slideCap strong{
+    .cap3d strong{
       font-size: 16px;
       letter-spacing:.2px;
-      text-shadow: 0 12px 38px rgba(0,0,0,.65);
+      text-shadow: 0 16px 44px rgba(0,0,0,.7);
     }
     .pill{
       padding:8px 10px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.14);
-      background: rgba(5,9,20,.45);
+      background: rgba(5,9,20,.46);
       backdrop-filter: blur(10px);
-      color: rgba(255,255,255,.85);
-      font-weight:900;
+      color: rgba(255,255,255,.86);
+      font-weight: 1000;
       font-size: 12px;
-      letter-spacing:.3px;
-      white-space:nowrap;
+      letter-spacing: .3px;
+      white-space: nowrap;
     }
 
     .controls{
-      display:flex; gap:10px; align-items:center; justify-content:flex-end;
+      display:flex; flex-wrap:wrap;
+      gap:10px; align-items:center; justify-content:flex-end;
       margin-top: 12px;
-      flex-wrap:wrap;
     }
     .ctrlBtn{
       padding:10px 12px;
@@ -257,29 +370,68 @@
       border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.05);
       color: var(--text);
-      font-weight:900;
+      font-weight: 1000;
       cursor:pointer;
       transition: transform .16s ease, background .16s ease, border-color .16s ease;
     }
     .ctrlBtn:hover{ transform: translateY(-2px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.20); }
     .toggle{
       display:flex; gap:8px; align-items:center;
-      color:var(--muted); font-weight:800; font-size: 13px;
+      color: var(--muted); font-weight:900; font-size: 13px;
       padding:10px 12px; border-radius:14px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.03);
     }
     .toggle input{ accent-color: var(--cyan); }
 
-    /* ===== Reveal ===== */
-    .reveal{opacity:0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease}
-    .reveal.visible{opacity:1; transform: translateY(0)}
+    /* ===== mini cards section ===== */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:14px;
+    }
+    .mini{
+      grid-column: span 4;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 14px 44px rgba(0,0,0,.35);
+      overflow:hidden;
+      position:relative;
+      transform-style: preserve-3d;
+      will-change: transform;
+      min-height: 220px;
+    }
+    @media (max-width: 980px){ .mini{ grid-column: span 6; } }
+    @media (max-width: 640px){ .mini{ grid-column: span 12; } }
+    .mini .mimg{
+      height: 140px;
+      background-size: cover;
+      background-position:center;
+      transform: translateZ(-18px) scale(1.06);
+      filter: saturate(1.05) contrast(1.02);
+    }
+    .mini .mbody{
+      padding: 12px 14px 14px;
+      transform: translateZ(18px);
+    }
+    .mini h3{ margin:0 0 6px; font-size: 16px; letter-spacing:.2px; }
+    .mini p{ margin:0; color: var(--muted); line-height:1.55; font-size: 14px; }
 
-    footer{padding:30px 0 44px; color: rgba(255,255,255,.62); text-align:center}
+    /* Reveal */
+    .reveal{
+      opacity:0;
+      transform: translateY(14px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.visible{ opacity:1; transform: translateY(0); }
+
+    footer{ padding: 30px 0 44px; color: rgba(255,255,255,.62); text-align:center; }
   </style>
 </head>
 <body>
   <div class="lights"></div>
+  <div class="grain"></div>
 
   <header>
     <div class="wrap nav">
@@ -287,13 +439,13 @@
         <div class="logo" aria-hidden="true"></div>
         <div>
           <strong>OM — Une Passion</strong>
-          <small>Bleu & Blanc • Ferveur • Frissons</small>
+          <small>Bleu & Blanc • Ferveur • Vélodrome</small>
         </div>
       </a>
       <nav class="links">
         <a href="#top">Accueil</a>
         <a href="#carrousel">Carrousel 3D</a>
-        <a href="#chants">Texte</a>
+        <a href="#plus">Plus</a>
       </nav>
     </div>
   </header>
@@ -302,64 +454,109 @@
     <section class="hero">
       <div class="reveal">
         <div class="kicker"><span class="dot"></span> Ici, l’OM n’est pas un club : c’est une émotion.</div>
-        <h1>OM : une passion qui se vit, pas qui se raconte.</h1>
+        <h1>OM : une passion en relief.</h1>
         <p class="lead">
-          Le Vélodrome, la ville, les chants… et cette fierté bleu & blanc. Survole, clique, fais glisser :
-          ce site bouge comme un soir de match.
+          Survole, fais glisser, joue avec la profondeur : ce site bouge comme un soir de match.
+          Le carrousel est un vrai cylindre 3D (rotation + perspective).
         </p>
         <div class="ctaRow">
           <a class="btn primary" href="#carrousel"><span class="icon">🌀</span> Voir le carrousel 3D</a>
-          <a class="btn" href="#chants"><span class="icon">💬</span> Lire le texte</a>
+          <a class="btn" href="#plus"><span class="icon">✨</span> Voir les effets</a>
         </div>
         <div class="hr"></div>
-        <p style="color:var(--muted);margin:0;font-weight:700">
-          Astuce : sur PC, fais glisser le carrousel avec la souris. Sur mobile, swipe.
+        <p style="margin:0;color:var(--muted);font-weight:800">
+          Astuce : molette = tourne le carrousel. Sur mobile : swipe.
         </p>
       </div>
 
       <div class="tiltStage reveal" style="transition-delay:.12s">
-        <div class="tilt carouselWrap" data-tilt>
+        <article class="panel tilt" data-tilt>
           <div class="glow" aria-hidden="true"></div>
-          <div class="carouselHeader">
-            <div>
-              <strong style="display:block;font-size:18px;letter-spacing:.2px">Carrousel 3D “Coverflow”</strong>
-              <span class="hint">Autoplay + drag + profondeur</span>
+          <div class="layer bg" aria-hidden="true"></div>
+          <div class="layer mid" aria-hidden="true"></div>
+          <div class="layer fg">
+            <div class="badgeRow">
+              <span class="badge">Ferveur</span>
+              <span class="badge">Bleu & Blanc</span>
+              <span class="badge">Vélodrome</span>
             </div>
-            <span class="pill">💙⚪ OM</span>
+            <h3 class="panelTitle">Le Vélodrome : un rugissement.</h3>
+            <p class="panelText">Quand la tribune s’allume, la ville vibre. L’OM, c’est plus grand que 90 minutes.</p>
           </div>
+        </article>
+      </div>
+    </section>
 
-          <div id="carrousel" class="carousel">
-            <div class="track" id="track"></div>
+    <section id="carrousel" class="reveal">
+      <div class="sectionTitle">
+        <h2>Carrousel 3D “Cylindre”</h2>
+        <p>Rotation autour d’un axe + profondeur. Drag / swipe / molette + autoplay + inertie.</p>
+      </div>
+
+      <div class="carouselWrap tilt" data-tilt>
+        <div class="glow" aria-hidden="true"></div>
+
+        <div class="carouselHeader">
+          <div>
+            <strong style="display:block;font-size:18px;letter-spacing:.2px">OM en 3D</strong>
+            <span class="hint">Souris : drag • Mobile : swipe • Molette : rotation</span>
           </div>
+          <span class="pill">💙⚪ OM</span>
+        </div>
 
-          <div class="controls">
-            <button class="ctrlBtn" id="prev">◀ Précédent</button>
-            <button class="ctrlBtn" id="next">Suivant ▶</button>
-
-            <label class="toggle" title="Active ou coupe le défilement automatique">
-              <input type="checkbox" id="autoplay" checked />
-              Autoplay
-            </label>
-
-            <button class="ctrlBtn" id="random">🎲 Aléatoire</button>
+        <div class="carousel3d" id="carousel3d">
+          <div class="scene">
+            <div class="ring" id="ring"></div>
           </div>
+        </div>
+
+        <div class="controls">
+          <button class="ctrlBtn" id="prev">◀ Précédent</button>
+          <button class="ctrlBtn" id="next">Suivant ▶</button>
+
+          <label class="toggle">
+            <input type="checkbox" id="autoplay" checked />
+            Autoplay
+          </label>
+
+          <button class="ctrlBtn" id="random">🎲 Aléatoire</button>
         </div>
       </div>
     </section>
 
-    <section id="chants" class="reveal">
+    <section id="plus" class="reveal">
       <div class="sectionTitle">
-        <h2>Chants & promesse</h2>
-        <p>Petit texte “tribune” (modifiable) pour ton site.</p>
+        <h2>Plus d’effets</h2>
+        <p>Cartes en tilt 3D + lumière qui suit la souris.</p>
       </div>
 
-      <div class="carouselWrap">
-        <strong style="display:block;font-size:18px">On est là.</strong>
-        <p style="color:var(--muted);line-height:1.7;margin:10px 0 0">
-          On est là quand ça gagne, on est là quand c’est dur. On est là parce qu’on aime.
-          Parce que l’OM, c’est une passion : une voix, un peuple, un battement.
-          Et tant qu’il y aura le bleu et le blanc, il y aura la fierté.
-        </p>
+      <div class="grid">
+        <article class="mini tilt" data-tilt>
+          <div class="glow" aria-hidden="true"></div>
+          <div class="mimg" style="background-image:url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1400&q=80')"></div>
+          <div class="mbody">
+            <h3>Ambiance</h3>
+            <p>Le bruit, les drapeaux, les chants : une énergie qui te traverse.</p>
+          </div>
+        </article>
+
+        <article class="mini tilt" data-tilt>
+          <div class="glow" aria-hidden="true"></div>
+          <div class="mimg" style="background-image:url('https://images.unsplash.com/photo-1508098682722-e99c643e7f2b?auto=format&fit=crop&w=1400&q=80')"></div>
+          <div class="mbody">
+            <h3>Frissons</h3>
+            <p>Une seconde… puis l’explosion. Le cœur va plus vite que le ballon.</p>
+          </div>
+        </article>
+
+        <article class="mini tilt" data-tilt>
+          <div class="glow" aria-hidden="true"></div>
+          <div class="mimg" style="background-image:url('https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1400&q=80')"></div>
+          <div class="mbody">
+            <h3>Fidélité</h3>
+            <p>Dans les hauts comme dans les bas : l’OM reste. Toujours.</p>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -370,14 +567,14 @@
   </main>
 
   <script>
-    // ===== Reveal =====
+    // ===== Reveal on scroll =====
     const reveals = document.querySelectorAll('.reveal');
     const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+      entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.12 });
     reveals.forEach(el => io.observe(el));
 
-    // ===== Tilt (cards/wrappers) + glow follow =====
+    // ===== Tilt + dynamic glow =====
     const tiltEls = document.querySelectorAll('[data-tilt]');
     tiltEls.forEach(el => {
       el.addEventListener('mousemove', (ev) => {
@@ -387,159 +584,135 @@
         const px = x / r.width;
         const py = y / r.height;
 
-        el.style.setProperty('--mx', (px * 100).toFixed(2) + '%');
-        el.style.setProperty('--my', (py * 100).toFixed(2) + '%');
+        el.style.setProperty('--mx', (px*100).toFixed(2) + '%');
+        el.style.setProperty('--my', (py*100).toFixed(2) + '%');
 
-        const rotY = (px - 0.5) * 10;
-        const rotX = (0.5 - py) * 8;
+        const maxY = 12, maxX = 10;
+        const rotY = (px - 0.5) * maxY;
+        const rotX = (0.5 - py) * maxX;
         el.style.transform = `translateY(-4px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg)`;
       });
       el.addEventListener('mouseleave', () => {
         el.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
-        el.style.setProperty('--mx', '50%');
-        el.style.setProperty('--my', '30%');
+        el.style.setProperty('--mx','50%');
+        el.style.setProperty('--my','30%');
       });
     });
 
-    // ===== 3D Coverflow Carousel =====
-    const slidesData = [
-      {
-        title: "Le Vélodrome qui gronde",
-        tag: "Ambiance",
-        url: "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1600&q=80"
-      },
-      {
-        title: "La ville et la mer",
-        tag: "Marseille",
-        url: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=80"
-      },
-      {
-        title: "Les soirs de match",
-        tag: "Frissons",
-        url: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1600&q=80"
-      },
-      {
-        title: "La ferveur en tribune",
-        tag: "Chants",
-        url: "https://images.unsplash.com/photo-1508098682722-e99c643e7f2b?auto=format&fit=crop&w=1600&q=80"
-      },
-      {
-        title: "Bleu & blanc",
-        tag: "Fierté",
-        url: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1600&q=80"
-      },
-      {
-        title: "Le collectif",
-        tag: "Équipe",
-        url: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80"
-      }
+    // ===== TRUE 3D Cylinder Carousel =====
+    const slides = [
+      { title:"Le Vélodrome qui gronde", tag:"Stade", url:"https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1600&q=80" },
+      { title:"Marseille, la mer, la ville", tag:"Marseille", url:"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=80" },
+      { title:"Les soirs de match", tag:"Frissons", url:"https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1600&q=80" },
+      { title:"La ferveur en tribune", tag:"Chants", url:"https://images.unsplash.com/photo-1508098682722-e99c643e7f2b?auto=format&fit=crop&w=1600&q=80" },
+      { title:"Bleu & blanc", tag:"Fierté", url:"https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1600&q=80" },
+      { title:"Le collectif", tag:"Équipe", url:"https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80" }
     ];
 
-    const track = document.getElementById('track');
-    let index = 0;
+    const ring = document.getElementById('ring');
+    const carousel = document.getElementById('carousel3d');
+
+    const autoplayToggle = document.getElementById('autoplay');
+    const btnPrev = document.getElementById('prev');
+    const btnNext = document.getElementById('next');
+    const btnRandom = document.getElementById('random');
+
+    let angle = 0;               // current rotation angle (deg)
+    let velocity = 0;            // inertia
     let isDown = false;
-    let startX = 0;
-    let dragDX = 0;
+    let lastX = 0;
     let autoplayTimer = null;
 
-    // Build slides
-    const slideEls = slidesData.map((s, i) => {
-      const el = document.createElement('div');
-      el.className = 'slide';
-      el.setAttribute('role', 'group');
-      el.setAttribute('aria-label', `${i+1} sur ${slidesData.length}`);
+    const N = slides.length;
+    const step = 360 / N;
 
-      el.innerHTML = `
-        <div class="slideImg" style="background-image:url('${s.url}')"></div>
-        <div class="glow" aria-hidden="true"></div>
-        <div class="slideCap">
-          <strong>${s.title}</strong>
-          <span class="pill">${s.tag}</span>
-        </div>
-      `;
-      // glow follow
-      el.addEventListener('mousemove', (ev) => {
-        const r = el.getBoundingClientRect();
-        const x = ev.clientX - r.left;
-        const y = ev.clientY - r.top;
-        el.style.setProperty('--mx', (x / r.width * 100).toFixed(2) + '%');
-        el.style.setProperty('--my', (y / r.height * 100).toFixed(2) + '%');
+    function build(){
+      ring.innerHTML = '';
+      slides.forEach((s, i) => {
+        const card = document.createElement('div');
+        card.className = 'card3d tilt';
+        card.setAttribute('data-tilt', ''); // reuse glow follow in this card too
+        card.innerHTML = `
+          <div class="img3d" style="background-image:url('${s.url}')"></div>
+          <div class="glow" aria-hidden="true"></div>
+          <div class="cap3d">
+            <strong>${s.title}</strong>
+            <span class="pill">${s.tag}</span>
+          </div>
+        `;
+        ring.appendChild(card);
+
+        // Place each card around cylinder
+        const a = i * step;
+        // radius depends on viewport for better 3D
+        card.dataset.baseAngle = String(a);
       });
-      el.addEventListener('mouseleave', () => {
-        el.style.setProperty('--mx', '50%');
-        el.style.setProperty('--my', '30%');
+      layout();
+    }
+
+    function layout(){
+      const cards = ring.querySelectorAll('.card3d');
+      const vw = Math.min(740, window.innerWidth * 0.92);
+      // radius formula: bigger screen -> bigger radius (prevents overlap)
+      const radius = Math.max(380, Math.min(520, vw * 0.72));
+      cards.forEach(card => {
+        const a = Number(card.dataset.baseAngle);
+        card.style.transform = `translate(-50%,-50%) rotateY(${a}deg) translateZ(${radius}px)`;
       });
-
-      track.appendChild(el);
-      return el;
-    });
-
-    function wrap(n, len){
-      // keep in [-inf, inf] but used for distance mapping
-      return ((n % len) + len) % len;
     }
 
     function render(){
-      const len = slideEls.length;
-
-      slideEls.forEach((el, i) => {
-        // distance from current index in circular space
-        let d = i - index;
-        // choose the shortest direction around the circle
-        if (d >  len/2) d -= len;
-        if (d < -len/2) d += len;
-
-        // Add drag influence (smooth during drag)
-        const dragInfluence = dragDX / 220; // tweak feel
-        const dd = d - dragInfluence;
-
-        const abs = Math.abs(dd);
-        const isCenter = abs < 0.5;
-
-        const rotateY = dd * -26;         // degrees
-        const translateX = dd * 160;      // px
-        const translateZ = 320 - abs * 180; // depth
-        const scale = 1 - abs * 0.10;
-        const opacity = 1 - abs * 0.18;
-
-        el.style.opacity = Math.max(0.25, opacity).toFixed(2);
-        el.style.transform = `
-          translate(-50%, -50%)
-          translateX(${translateX}px)
-          translateZ(${translateZ}px)
-          rotateY(${rotateY}deg)
-          scale(${Math.max(0.76, scale).toFixed(3)})
-        `;
-
-        el.style.filter = `blur(${Math.min(2.2, abs*0.55).toFixed(2)}px)`;
-        el.style.zIndex = String(1000 - Math.round(abs*10));
-
-        // cursor and a subtle border emphasis on center slide
-        el.style.borderColor = isCenter ? 'rgba(46,230,255,.35)' : 'rgba(255,255,255,.14)';
+      // smooth “depth” vibe: slight tilt on ring from velocity
+      const tiltX = clamp(-velocity * 0.25, -8, 8);
+      ring.style.transform = `rotateX(${tiltX}deg) rotateY(${angle}deg)`;
+      // fade cards depending on facing camera
+      const cards = ring.querySelectorAll('.card3d');
+      cards.forEach(card => {
+        const a = Number(card.dataset.baseAngle) + angle;
+        // facing factor based on cos
+        const rad = (a % 360) * Math.PI/180;
+        const face = (Math.cos(rad) + 1) / 2; // 0..1
+        const opacity = 0.35 + face * 0.65;
+        const blur = (1 - face) * 2.2;
+        card.style.opacity = opacity.toFixed(2);
+        card.style.filter = `blur(${blur.toFixed(2)}px)`;
+        card.style.borderColor = face > 0.85 ? 'rgba(46,230,255,.35)' : 'rgba(255,255,255,.14)';
       });
     }
 
-    function go(nextIndex){
-      const len = slideEls.length;
-      index = wrap(nextIndex, len);
+    function tick(){
+      if (!isDown){
+        angle += velocity;
+        velocity *= 0.94; // friction
+        if (Math.abs(velocity) < 0.001) velocity = 0;
+      }
       render();
+      requestAnimationFrame(tick);
     }
 
-    function next(){ go(index + 1); }
-    function prev(){ go(index - 1); }
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
-    // Buttons
-    document.getElementById('next').addEventListener('click', next);
-    document.getElementById('prev').addEventListener('click', prev);
-    document.getElementById('random').addEventListener('click', () => {
-      const len = slideEls.length;
-      let r = Math.floor(Math.random() * len);
-      if (r === index) r = (r + 1) % len;
-      go(r);
-    });
+    function rotateToIndex(idx){
+      // bring slide idx to front (angle so that baseAngle aligns)
+      const target = -idx * step;
+      // choose shortest path
+      let diff = (target - angle) % 360;
+      if (diff > 180) diff -= 360;
+      if (diff < -180) diff += 360;
+      // kick velocity toward target (nice snap)
+      velocity += diff * 0.08;
+    }
 
-    // Autoplay toggle
-    const autoplay = document.getElementById('autoplay');
+    function currentIndex(){
+      // nearest index to front
+      const normalized = ((-angle % 360) + 360) % 360;
+      return Math.round(normalized / step) % N;
+    }
+
+    function next(){ rotateToIndex((currentIndex() + 1) % N); }
+    function prev(){ rotateToIndex((currentIndex() - 1 + N) % N); }
+
+    // Autoplay
     function startAutoplay(){
       stopAutoplay();
       autoplayTimer = setInterval(() => {
@@ -550,63 +723,94 @@
       if (autoplayTimer) clearInterval(autoplayTimer);
       autoplayTimer = null;
     }
-    autoplay.addEventListener('change', () => {
-      autoplay.checked ? startAutoplay() : stopAutoplay();
+
+    autoplayToggle.addEventListener('change', () => {
+      autoplayToggle.checked ? startAutoplay() : stopAutoplay();
+    });
+
+    btnNext.addEventListener('click', next);
+    btnPrev.addEventListener('click', prev);
+    btnRandom.addEventListener('click', () => {
+      let r = Math.floor(Math.random() * N);
+      if (r === currentIndex()) r = (r + 1) % N;
+      rotateToIndex(r);
     });
 
     // Drag / Swipe
-    const carousel = document.querySelector('.carousel');
-
-    function pointerDown(clientX){
+    function down(x){
       isDown = true;
-      startX = clientX;
-      dragDX = 0;
+      lastX = x;
       stopAutoplay();
     }
-    function pointerMove(clientX){
+    function move(x){
       if(!isDown) return;
-      dragDX = clientX - startX;
-      render();
+      const dx = x - lastX;
+      lastX = x;
+      // rotate by drag
+      angle += dx * 0.25;
+      velocity = dx * 0.10; // inertia injection
     }
-    function pointerUp(){
+    function up(){
       if(!isDown) return;
       isDown = false;
-
-      // snap to nearest
-      const threshold = 60;
-      if (dragDX > threshold) prev();
-      else if (dragDX < -threshold) next();
-      else render();
-
-      dragDX = 0;
-
-      if (autoplay.checked) startAutoplay();
+      // gentle snap toward nearest slide
+      rotateToIndex(currentIndex());
+      if (autoplayToggle.checked) startAutoplay();
     }
 
-    // Mouse
-    carousel.addEventListener('mousedown', (e) => pointerDown(e.clientX));
-    window.addEventListener('mousemove', (e) => pointerMove(e.clientX));
-    window.addEventListener('mouseup', pointerUp);
+    carousel.addEventListener('mousedown', (e)=> down(e.clientX));
+    window.addEventListener('mousemove', (e)=> move(e.clientX));
+    window.addEventListener('mouseup', up);
 
-    // Touch
-    carousel.addEventListener('touchstart', (e) => pointerDown(e.touches[0].clientX), {passive:true});
-    carousel.addEventListener('touchmove', (e) => pointerMove(e.touches[0].clientX), {passive:true});
-    carousel.addEventListener('touchend', pointerUp);
+    carousel.addEventListener('touchstart', (e)=> down(e.touches[0].clientX), {passive:true});
+    carousel.addEventListener('touchmove', (e)=> move(e.touches[0].clientX), {passive:true});
+    carousel.addEventListener('touchend', up);
+
+    // Wheel rotate
+    carousel.addEventListener('wheel', (e)=>{
+      e.preventDefault();
+      stopAutoplay();
+      const delta = Math.sign(e.deltaY);
+      velocity += -delta * 1.25; // wheel "push"
+      if (autoplayToggle.checked) startAutoplay();
+    }, {passive:false});
 
     // Keyboard
     window.addEventListener('keydown', (e)=>{
-      if(e.key === 'ArrowRight') next();
-      if(e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
     });
 
-    // Initial
+    // Visibility
+    document.addEventListener('visibilitychange', ()=>{
+      if (document.hidden) stopAutoplay();
+      else if (autoplayToggle.checked) startAutoplay();
+    });
+
+    // Build + start
+    build();
     render();
+    tick();
     startAutoplay();
 
-    // Pause autoplay when tab not visible (clean)
-    document.addEventListener('visibilitychange', ()=>{
-      if(document.hidden) stopAutoplay();
-      else if(autoplay.checked) startAutoplay();
+    window.addEventListener('resize', ()=> { layout(); render(); });
+
+    // Re-apply tilt glow to dynamically created carousel cards
+    // (simple: same logic as earlier but only for cards inside ring)
+    ring.addEventListener('mousemove', (ev) => {
+      const card = ev.target.closest('.card3d');
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      const x = ev.clientX - r.left;
+      const y = ev.clientY - r.top;
+      card.style.setProperty('--mx', (x / r.width * 100).toFixed(2) + '%');
+      card.style.setProperty('--my', (y / r.height * 100).toFixed(2) + '%');
+    });
+    ring.addEventListener('mouseleave', () => {
+      ring.querySelectorAll('.card3d').forEach(card=>{
+        card.style.setProperty('--mx','50%');
+        card.style.setProperty('--my','30%');
+      });
     });
   </script>
 </body>
