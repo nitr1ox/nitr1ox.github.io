@@ -1,97 +1,1550 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conditions et Politique de Confidentialité</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        nav {
-            background-color: #333;
-            overflow: hidden;
-        }
-        nav a {
-            float: left;
-            display: block;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
-        nav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-        main {
-            padding: 20px;
-            max-width: 800px;
-            margin: auto;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-        h2 {
-            color: #333;
-        }
-        footer {
-            text-align: center;
-            padding: 10px;
-            background-color: #ddd;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AK-47 CHAT</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg1:#0a0a0a;--bg2:#111111;--bg3:#1a1a1a;--bg4:#222222;
+  --accent:#c8a84b;--accent2:#e8c96b;--accent3:#9a7e32;
+  --text1:#f0ede8;--text2:#888880;--text3:#444440;
+  --green:#4caf7d;--red:#e05252;--border:rgba(255,255,255,0.06);
+  --nitro:#9b59f5;--nitro2:#b07ef7;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg1);color:var(--text1);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+/* ===== AUTH ===== */
+#authScreen{display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg1);position:relative;overflow:hidden}
+#authScreen::before{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(200,168,75,0.08)0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.authCard{background:var(--bg2);border:1px solid rgba(200,168,75,0.2);border-radius:16px;padding:40px;width:380px;position:relative;z-index:1}
+.authLogo{display:flex;align-items:center;gap:14px;margin-bottom:32px;justify-content:center}
+.logoIcon{font-size:32px}
+.logoText{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:var(--accent)}
+.authTitle{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;margin-bottom:6px;text-align:center}
+.authSub{color:var(--text2);font-size:12px;text-align:center;margin-bottom:28px}
+.authTabs{display:flex;background:var(--bg3);border-radius:8px;padding:3px;margin-bottom:24px;gap:3px}
+.authTab{flex:1;padding:8px;border:none;background:transparent;color:var(--text2);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;border-radius:6px;cursor:pointer;transition:all 0.2s}
+.authTab.active{background:var(--accent);color:#0a0a0a}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:10px;font-weight:600;color:var(--text3);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px}
+.fg input{width:100%;padding:10px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text1);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s}
+.fg input:focus{border-color:rgba(200,168,75,0.5)}
+.fg input::placeholder{color:var(--text3)}
+.authBtn{width:100%;padding:11px;background:var(--accent);border:none;border-radius:8px;color:#0a0a0a;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;transition:all 0.2s;margin-top:8px}
+.authBtn:hover{background:var(--accent2)}
+.authErr{background:rgba(224,82,82,0.1);border:1px solid rgba(224,82,82,0.3);border-radius:7px;padding:9px 13px;font-size:12px;color:var(--red);margin-bottom:14px;display:none}
+.authOk{background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.3);border-radius:7px;padding:9px 13px;font-size:12px;color:var(--green);margin-bottom:14px;display:none}
+
+/* ===== APP LAYOUT ===== */
+#appScreen{display:none;height:100vh;flex-direction:column}
+.appLayout{display:flex;flex:1;overflow:hidden}
+
+/* ===== SERVER RAIL (icônes gauche) ===== */
+.serverRail{width:64px;background:#0d0d0d;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:6px;overflow-y:auto;flex-shrink:0}
+.serverRail::-webkit-scrollbar{display:none}
+.railIcon{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:all 0.2s;position:relative;flex-shrink:0;font-weight:700;color:#0a0a0a}
+.railIcon:hover{border-radius:10px}
+.railIcon.active{border-radius:10px}
+.railIcon.active::before{content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:4px;height:70%;background:var(--accent);border-radius:0 3px 3px 0}
+.railSep{width:30px;height:1px;background:var(--border);margin:4px 0;flex-shrink:0}
+.railAdd{width:44px;height:44px;border-radius:50%;background:var(--bg3);border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--green);cursor:pointer;transition:all 0.2s;flex-shrink:0}
+.railAdd:hover{background:rgba(76,175,125,0.1);border-color:var(--green);border-radius:14px}
+
+/* ===== SIDEBAR ===== */
+.sidebar{width:210px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.serverHeader{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;cursor:pointer;transition:background 0.15s}
+.serverHeader:hover{background:var(--bg3)}
+.serverHeaderEmoji{font-size:18px}
+.serverHeaderName{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--accent);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.serverHeaderChevron{font-size:11px;color:var(--text3)}
+.channelSection{padding:14px 10px 8px;flex:1;overflow-y:auto}
+.channelSection::-webkit-scrollbar{width:3px}
+.sectionLabel{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:0 6px;margin-bottom:5px}
+.channel{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;transition:all 0.15s;position:relative}
+.channel:hover{background:var(--bg3);color:var(--text1)}
+.channel.active{background:rgba(200,168,75,0.15);color:var(--accent);border-left:2px solid var(--accent);padding-left:6px}
+.channelHash{color:var(--accent);font-weight:700}
+.sidebarBottom{margin-top:auto;padding:10px;border-top:1px solid var(--border);display:flex;align-items:center;gap:9px}
+.myAva{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#0a0a0a;cursor:pointer;flex-shrink:0}
+.myName{font-size:12px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.myStatus{font-size:10px;color:var(--green)}
+.iconBtn{width:28px;height:28px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--text2);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0}
+.iconBtn:hover{background:var(--bg3);color:var(--text1)}
+.iconBtn.danger:hover{background:rgba(224,82,82,0.1);color:var(--red);border-color:rgba(224,82,82,0.3)}
+
+/* ===== MEMBERS PANEL ===== */
+.membersPanel{width:180px;background:var(--bg2);border-left:1px solid var(--border);padding:14px 10px;flex-shrink:0;overflow-y:auto}
+.membersPanel::-webkit-scrollbar{width:3px}
+.memberGroup{margin-bottom:14px}
+.memberGroupLabel{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.memberRow{display:flex;align-items:center;gap:8px;padding:4px 4px;border-radius:6px;cursor:pointer;transition:background 0.15s;margin-bottom:2px}
+.memberRow:hover{background:var(--bg3)}
+.memberAva{width:28px;height:28px;border-radius:7px;font-size:11px;font-weight:700;color:#0a0a0a;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.memberAva::after{content:'';position:absolute;bottom:-1px;right:-1px;width:8px;height:8px;border-radius:50%;border:2px solid var(--bg2)}
+.s-online::after{background:var(--green)}
+.s-away::after{background:#f5a742}
+.s-dnd::after{background:var(--red)}
+.s-offline::after{background:var(--text3)}
+.memberName{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.memberName.offline{color:var(--text3)}
+
+/* ===== CHAT ===== */
+.chatArea{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.chatHeader{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--bg1)}
+.chatHeaderName{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px}
+.chatHeaderDesc{font-size:11px;color:var(--text2)}
+.chatHeaderRight{margin-left:auto;display:flex;align-items:center;gap:8px}
+.messages{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:1px;scroll-behavior:smooth}
+.messages::-webkit-scrollbar{width:3px}
+.messages::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+.msgGroup{display:flex;gap:11px;padding:5px 4px;border-radius:7px;position:relative}
+.msgGroup:hover{background:rgba(255,255,255,0.02)}
+.msgGroup:hover .msgActions{display:flex}
+.msgAva{width:34px;height:34px;border-radius:8px;font-size:13px;font-weight:700;color:#0a0a0a;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;cursor:pointer}
+.msgContent{flex:1;min-width:0}
+.msgMeta{display:flex;align-items:baseline;gap:8px;margin-bottom:2px;flex-wrap:wrap}
+.msgAuthor{font-size:13px;font-weight:600;cursor:pointer}
+.msgAuthor:hover{text-decoration:underline}
+.msgTime{font-size:10px;color:var(--text3)}
+.msgText{font-size:13px;line-height:1.55;word-break:break-word}
+.msgText .mention{background:rgba(200,168,75,0.15);color:var(--accent);border-radius:3px;padding:0 3px;font-weight:600}
+.msgText code{background:var(--bg3);border-radius:3px;padding:1px 5px;font-family:monospace;font-size:12px;color:#5dd6b5}
+.msgText .imgPreview{max-width:280px;max-height:200px;border-radius:8px;margin-top:5px;display:block}
+.msgActions{display:none;position:absolute;right:8px;top:4px;gap:4px;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:3px 5px}
+.msgActionBtn{padding:3px 6px;border:none;border-radius:4px;font-size:11px;cursor:pointer;background:transparent;color:var(--text2);transition:all 0.15s}
+.msgActionBtn:hover{background:var(--bg3);color:var(--text1)}
+.msgActionBtn.del:hover{color:var(--red)}
+.reactions{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.reaction{display:inline-flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:2px 7px;font-size:12px;cursor:pointer;transition:all 0.15s}
+.reaction:hover,.reaction.mine{background:rgba(200,168,75,0.12);border-color:rgba(200,168,75,0.3)}
+.reaction span{font-size:10px;color:var(--text2)}
+.replyPreview{font-size:11px;color:var(--text3);border-left:2px solid var(--text3);padding-left:6px;margin-bottom:3px;opacity:0.7}
+.systemMsg{text-align:center;font-size:11px;color:var(--text3);padding:8px}
+.systemMsg span{background:var(--bg3);padding:3px 12px;border-radius:20px}
+.loadingMsg{display:flex;align-items:center;justify-content:center;padding:20px;color:var(--text3);font-size:12px;gap:8px}
+.spinner{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* input */
+.chatInputArea{padding:12px 18px;background:var(--bg1)}
+.chatInputWrap{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:9px 12px;transition:border-color 0.2s}
+.chatInputWrap:focus-within{border-color:rgba(200,168,75,0.4)}
+.replyBar{border-left:3px solid var(--accent);padding:5px 10px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;border-radius:0 5px 5px 0;background:rgba(200,168,75,0.05)}
+.replyBar span{font-size:11px;color:var(--text2)}
+.replyBar button{background:none;border:none;color:var(--text3);cursor:pointer}
+.mentionList{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:4px;margin-bottom:4px;display:none}
+.mentionItem{padding:5px 8px;border-radius:5px;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:7px}
+.mentionItem:hover,.mentionItem.sel{background:rgba(200,168,75,0.1);color:var(--accent)}
+.mentionAva{width:20px;height:20px;border-radius:4px;font-size:9px;font-weight:700;color:#0a0a0a;display:flex;align-items:center;justify-content:center}
+.inputRow{display:flex;align-items:center;gap:9px}
+.chatInput{flex:1;background:transparent;border:none;outline:none;color:var(--text1);font-family:'Inter',sans-serif;font-size:13px}
+.chatInput::placeholder{color:var(--text3)}
+.sendBtn{width:32px;height:32px;background:var(--accent);border:none;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s;color:#0a0a0a;font-size:14px;flex-shrink:0}
+.sendBtn:hover{background:var(--accent2)}
+.typingIndicator{font-size:11px;color:var(--text3);padding:2px 0;height:17px;margin-top:3px}
+
+/* ===== BADGES ===== */
+.badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;letter-spacing:0.5px;vertical-align:middle;margin-left:3px}
+.badge-admin{background:rgba(224,82,82,0.2);color:var(--red);border:1px solid rgba(224,82,82,0.4)}
+.badge-nitro{background:rgba(155,89,245,0.2);color:var(--nitro2);border:1px solid rgba(155,89,245,0.4)}
+.badge-owner{background:rgba(200,168,75,0.2);color:var(--accent);border:1px solid rgba(200,168,75,0.4)}
+
+/* ===== MODALS ===== */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;z-index:1500}
+.overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;width:460px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal::-webkit-scrollbar{width:3px}
+.mh{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.mh h2{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--accent);flex:1}
+.mclose{background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer;padding:2px 6px;border-radius:5px}
+.mclose:hover{color:var(--text1);background:var(--bg3)}
+.msec{margin-bottom:20px}
+.msec h3{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.mrow{display:flex;gap:8px;margin-bottom:8px}
+.minput{flex:1;padding:9px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text1);font-family:'Inter',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s}
+.minput:focus{border-color:rgba(200,168,75,0.5)}
+.minput::placeholder{color:var(--text3)}
+.mbtn{padding:9px 16px;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.mbtn.acc{background:var(--accent);color:#0a0a0a}
+.mbtn.acc:hover{background:var(--accent2)}
+.mbtn.danger{background:rgba(224,82,82,0.1);color:var(--red);border:1px solid rgba(224,82,82,0.3)}
+.mbtn.danger:hover{background:rgba(224,82,82,0.2)}
+.mbtn.nit{background:rgba(155,89,245,0.1);color:var(--nitro2);border:1px solid rgba(155,89,245,0.3)}
+.mbtn.nit:hover{background:rgba(155,89,245,0.2)}
+.mbtn.ghost{background:transparent;color:var(--text2);border:1px solid var(--border)}
+.mbtn.ghost:hover{background:var(--bg3);color:var(--text1)}
+
+/* settings tabs */
+.settingsTabs{display:flex;gap:4px;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:0}
+.stab{padding:8px 14px;border:none;background:transparent;color:var(--text2);font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s}
+.stab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.stab:hover{color:var(--text1)}
+.stabContent{display:none}
+.stabContent.active{display:block}
+
+/* profile big */
+.profAva{width:70px;height:70px;border-radius:14px;font-size:26px;font-weight:700;color:#0a0a0a;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.statusGrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px}
+.statusOpt{padding:7px 8px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:11px;display:flex;align-items:center;gap:5px;transition:all 0.15s}
+.statusOpt:hover,.statusOpt.sel{border-color:rgba(200,168,75,0.4);background:rgba(200,168,75,0.07)}
+.sdot{width:7px;height:7px;border-radius:50%}
+
+/* nitro code display */
+.nitroCodeBox{background:var(--bg3);border:1px solid rgba(155,89,245,0.3);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:13px;color:var(--nitro2);letter-spacing:1px;display:flex;align-items:center;justify-content:space-between;margin:4px 0;word-break:break-all}
+.nitroLinkBox{background:var(--bg3);border:1px solid rgba(155,89,245,0.2);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--text2);display:flex;align-items:center;justify-content:space-between;margin-top:4px;gap:8px}
+.nitroLinkBox span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace;color:var(--nitro2)}
+.nitroItem{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;font-size:11px;margin-bottom:5px}
+.nitroItem.claimed{opacity:0.45}
+.nicode{font-family:monospace;color:var(--nitro2);font-size:12px}
+.nistat{font-size:10px;color:var(--text3)}
+.nistat.ok{color:var(--green)}
+
+/* server invite banner */
+.inviteBanner{background:linear-gradient(135deg,rgba(155,89,245,0.15),rgba(200,168,75,0.1));border:1px solid rgba(155,89,245,0.3);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.inviteBanner h3{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--accent);margin-bottom:6px}
+
+/* admin user row */
+.adminRow{display:flex;align-items:center;gap:10px;padding:7px 8px;border:1px solid var(--border);border-radius:7px;margin-bottom:5px}
+.adminRow .aname{flex:1;font-size:12px}
+.adminRowBtns{display:flex;gap:4px}
+
+/* server create emoji picker */
+.emojiGrid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-top:8px}
+.emojiOpt{padding:6px;border-radius:6px;cursor:pointer;text-align:center;font-size:20px;transition:background 0.15s;border:2px solid transparent}
+.emojiOpt:hover,.emojiOpt.sel{background:rgba(200,168,75,0.1);border-color:rgba(200,168,75,0.3)}
+
+/* toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg3);border:1px solid rgba(200,168,75,0.3);border-radius:8px;padding:10px 16px;font-size:12px;color:var(--text1);z-index:3000;opacity:0;transform:translateY(8px);transition:all 0.3s;pointer-events:none;max-width:300px}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* join server screen */
+.joinCard{background:var(--bg2);border:1px solid rgba(200,168,75,0.25);border-radius:16px;padding:36px;width:400px;text-align:center;position:relative;z-index:1}
+.joinCard .serverBigEmoji{font-size:56px;margin-bottom:12px}
+.joinCard h2{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--accent);margin-bottom:6px}
+.joinCard p{color:var(--text2);font-size:13px;margin-bottom:22px}
+
+@media(max-width:900px){.membersPanel{display:none}}
+@media(max-width:600px){.sidebar{display:none}.serverRail{display:none}}
+</style>
 </head>
 <body>
 
-<header>
-    <h1>Mon Bot - Informations Légales</h1>
-</header>
+<!-- AUTH -->
+<div id="authScreen">
+  <div class="authCard">
+    <div class="authLogo"><span class="logoIcon">🔫</span><span class="logoText">AK-47 CHAT</span></div>
+    <div class="authTitle">Rejoins le serveur</div>
+    <div class="authSub">Identifie-toi pour entrer</div>
+    <div class="authTabs">
+      <button class="authTab active" onclick="switchAuthTab('login')">Connexion</button>
+      <button class="authTab" onclick="switchAuthTab('register')">Créer un compte</button>
+    </div>
+    <div id="authErr" class="authErr"></div>
+    <div id="authOk" class="authOk"></div>
+    <div id="loginForm">
+      <div class="fg"><label>Pseudo</label><input type="text" id="loginUser" placeholder="Ton pseudo..." autocomplete="username"/></div>
+      <div class="fg"><label>Mot de passe</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button class="authBtn" onclick="doLogin()">ENTRER</button>
+    </div>
+    <div id="registerForm" style="display:none">
+      <div class="fg"><label>Pseudo</label><input type="text" id="regUser" placeholder="Choisis un pseudo..."/></div>
+      <div class="fg"><label>Mot de passe</label><input type="password" id="regPass" placeholder="••••••••"/></div>
+      <div class="fg"><label>Confirmer</label><input type="password" id="regPass2" placeholder="••••••••" onkeydown="if(event.key==='Enter')doRegister()"/></div>
+      <button class="authBtn" onclick="doRegister()">CRÉER MON COMPTE</button>
+    </div>
+  </div>
+</div>
 
-<nav>
-    <a href="#conditions">Conditions d'Utilisation</a>
-    <a href="#confidentialite">Politique de Confidentialité</a>
-</nav>
+<!-- JOIN INVITE (affiché quand ?invite=xxx dans l'URL) -->
+<div id="joinScreen" style="display:none;align-items:center;justify-content:center;height:100vh;background:var(--bg1);position:relative">
+  <div id="authScreen_bg" style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(200,168,75,0.06)0%,transparent 70%)"></div>
+  <div class="joinCard">
+    <div class="serverBigEmoji" id="joinEmoji">🔫</div>
+    <h2 id="joinName">Serveur</h2>
+    <p id="joinDesc">Tu as été invité à rejoindre ce serveur.</p>
+    <div id="joinAuthSection"></div>
+  </div>
+</div>
 
-<main>
-    <section id="conditions">
-        <h2>Conditions d'Utilisation</h2>
-        <p>Bienvenue sur notre bot. En utilisant ce service, vous acceptez les conditions suivantes :</p>
-        <ul>
-            <li>Vous êtes responsable de l’utilisation que vous faites du bot.</li>
-            <li>Vous ne devez pas utiliser le bot pour des activités illégales ou nuisibles.</li>
-            <li>Nous nous réservons le droit de modifier ou d’interrompre le service à tout moment.</li>
-            <li>Les informations fournies par le bot sont à titre indicatif et ne remplacent pas un avis professionnel.</li>
-        </ul>
-    </section>
+<!-- APP -->
+<div id="appScreen">
+  <div class="appLayout">
+    <!-- SERVER RAIL -->
+    <div class="serverRail" id="serverRail">
+      <!-- rempli dynamiquement -->
+    </div>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="serverHeader" id="serverHeader" onclick="openServerSettings()">
+        <span class="serverHeaderEmoji" id="sidebarEmoji">🔫</span>
+        <span class="serverHeaderName" id="sidebarName">AK-47 CHAT</span>
+        <span class="serverHeaderChevron">⚙</span>
+      </div>
+      <div class="channelSection" id="channelList"></div>
+      <div class="sidebarBottom">
+        <div class="myAva" id="myAvatar" onclick="openMyProfile()"></div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:3px">
+            <div class="myName" id="myName">...</div>
+            <span id="myBadge"></span>
+          </div>
+          <div class="myStatus" id="myStatusText">● en ligne</div>
+        </div>
+        <button class="iconBtn" title="Paramètres" onclick="openMyProfile()">⚙</button>
+        <button class="iconBtn danger" title="Déconnexion" onclick="doLogout()">⏻</button>
+      </div>
+    </div>
 
-    <section id="confidentialite">
-        <h2>Politique de Confidentialité</h2>
-        <p>Votre vie privée est importante pour nous. Voici comment nous traitons vos données :</p>
-        <ul>
-            <li>Nous ne collectons pas d’informations personnelles sensibles sans consentement.</li>
-            <li>Les données collectées peuvent inclure l’usage du bot pour améliorer le service.</li>
-            <li>Nous ne partageons pas vos informations avec des tiers sauf obligation légale.</li>
-            <li>Vous pouvez demander la suppression de vos données à tout moment.</li>
-        </ul>
-        <p>Pour toute question sur vos données, contactez-nous à <a href="mailto:contact@monbot.com">contact@monbot.com</a>.</p>
-    </section>
-</main>
+    <!-- CHAT -->
+    <div class="chatArea">
+      <div class="chatHeader">
+        <div>
+          <div class="chatHeaderName" id="channelName">GÉNÉRAL</div>
+          <div class="chatHeaderDesc" id="channelDesc"></div>
+        </div>
+        <div class="chatHeaderRight">
+          <span style="font-size:11px;color:var(--text2)" id="onlineCount"></span>
+        </div>
+      </div>
+      <div class="messages" id="messages"><div class="loadingMsg"><div class="spinner"></div>Chargement...</div></div>
+      <div class="typingIndicator" id="typingIndicator"></div>
+      <div class="chatInputArea">
+        <div class="chatInputWrap" id="chatInputWrap">
+          <div id="replyBarSlot"></div>
+          <div class="mentionList" id="mentionList"></div>
+          <div class="inputRow">
+            <input class="chatInput" id="msgInput" placeholder="Envoyer dans #général" maxlength="500" oninput="onTyping();onMentionInput()" onkeydown="handleKey(event)"/>
+            <button class="sendBtn" onclick="sendMessage()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<footer>
-    &copy; 2026 Mon Bot. Tous droits réservés.
-</footer>
+    <!-- MEMBERS PANEL -->
+    <div class="membersPanel">
+      <div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Membres</div>
+      <div id="membersList"></div>
+    </div>
+  </div>
+</div>
 
+<div class="toast" id="toast"></div>
+
+<!-- ============================================================ -->
+<!--                         MODALS                              -->
+<!-- ============================================================ -->
+
+<!-- MON PROFIL / PARAMÈTRES USER -->
+<div class="overlay" id="profileModal">
+<div class="modal">
+  <div class="mh"><h2>⚙ Paramètres</h2><button class="mclose" onclick="closeModal('profileModal')">✕</button></div>
+  <div class="settingsTabs">
+    <button class="stab active" onclick="showStab('profil')">Mon profil</button>
+    <button class="stab" onclick="showStab('compte')">Compte</button>
+    <button class="stab" onclick="showStab('nitro')">Nitro</button>
+  </div>
+
+  <!-- PROFIL TAB -->
+  <div class="stabContent active" id="stab-profil">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+      <div class="profAva" id="myProfAva"></div>
+      <div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px" id="myProfName"></div>
+        <div id="myProfBadges" style="margin:3px 0"></div>
+        <div style="font-size:11px;color:var(--text3)" id="myProfJoined"></div>
+      </div>
+    </div>
+    <div class="msec">
+      <h3>Statut</h3>
+      <div class="statusGrid">
+        <div class="statusOpt sel" id="so-online" onclick="setStatus('online')"><span class="sdot" style="background:var(--green)"></span>En ligne</div>
+        <div class="statusOpt" id="so-away" onclick="setStatus('away')"><span class="sdot" style="background:#f5a742"></span>AFK</div>
+        <div class="statusOpt" id="so-dnd" onclick="setStatus('dnd')"><span class="sdot" style="background:var(--red)"></span>DND</div>
+      </div>
+      <div class="mrow">
+        <input class="minput" id="statusMsgInp" placeholder="Message de statut..." maxlength="60"/>
+        <button class="mbtn acc" onclick="saveStatusMsg()">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPTE TAB -->
+  <div class="stabContent" id="stab-compte">
+    <div class="msec">
+      <h3>Changer de pseudo</h3>
+      <div class="mrow">
+        <input class="minput" id="changeNameInp" placeholder="Nouveau pseudo..."/>
+        <button class="mbtn acc" onclick="changeName()">Changer</button>
+      </div>
+    </div>
+    <div class="msec">
+      <h3>Changer le mot de passe</h3>
+      <input class="minput" id="oldPassInp" placeholder="Ancien mot de passe" type="password" style="margin-bottom:7px;width:100%"/>
+      <input class="minput" id="newPassInp" placeholder="Nouveau mot de passe" type="password" style="margin-bottom:7px;width:100%"/>
+      <button class="mbtn acc" onclick="changePass()">Changer</button>
+    </div>
+    <div class="msec">
+      <h3>Danger</h3>
+      <button class="mbtn danger" onclick="deleteMyAccount()">Supprimer mon compte</button>
+    </div>
+  </div>
+
+  <!-- NITRO TAB -->
+  <div class="stabContent" id="stab-nitro">
+    <div id="nitroStatusBlock"></div>
+    <div class="msec">
+      <h3>Activer un code Nitro</h3>
+      <div class="mrow">
+        <input class="minput" id="nitroClaimInp" placeholder="AK47-XXXX-XXXX-XXXX" style="font-family:monospace;text-transform:uppercase"/>
+        <button class="mbtn nit" onclick="claimNitro()">Activer</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PROFIL AUTRE USER -->
+<div class="overlay" id="userModal">
+<div class="modal" style="max-width:360px">
+  <div class="mh"><h2>👤 Profil</h2><button class="mclose" onclick="closeModal('userModal')">✕</button></div>
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:18px">
+    <div class="profAva" id="uProfAva"></div>
+    <div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px" id="uProfName"></div>
+      <div id="uProfBadges" style="margin:3px 0"></div>
+      <div style="font-size:11px;color:var(--text2)" id="uProfStatusMsg"></div>
+      <div style="font-size:11px;color:var(--text3)" id="uProfJoined"></div>
+    </div>
+  </div>
+  <div id="uAdminSection" style="display:none">
+    <div class="msec">
+      <h3>🛡️ Actions Admin</h3>
+      <div style="display:flex;gap:7px;flex-wrap:wrap">
+        <button class="mbtn nit" id="uGrantNitroBtn" onclick="adminGrantNitro()">💎 Donner Nitro</button>
+        <button class="mbtn danger" id="uRevokeNitroBtn" onclick="adminRevokeNitro()">Retirer Nitro</button>
+        <button class="mbtn danger" onclick="adminDeleteUser()">🗑️ Supprimer compte</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CRÉER SERVEUR -->
+<div class="overlay" id="createServerModal">
+<div class="modal" style="max-width:400px">
+  <div class="mh"><h2>🔧 Créer un serveur</h2><button class="mclose" onclick="closeModal('createServerModal')">✕</button></div>
+  <div class="msec">
+    <h3>Nom du serveur</h3>
+    <input class="minput" id="csName" placeholder="Mon super serveur..." style="width:100%;margin-bottom:10px" maxlength="30"/>
+    <h3 style="margin-top:12px">URL du serveur</h3>
+    <div class="mrow" style="align-items:center">
+      <span style="font-size:12px;color:var(--text3);white-space:nowrap">ak47.chat/</span>
+      <input class="minput" id="csSlug" placeholder="mon-serveur" style="font-family:monospace" maxlength="24"/>
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-top:4px">Lettres, chiffres et tirets uniquement. Unique sur la plateforme.</div>
+    <h3 style="margin-top:12px">Icône</h3>
+    <div class="emojiGrid" id="csEmojiGrid"></div>
+    <input class="minput" id="csEmojiCustom" placeholder="Ou tape un emoji..." maxlength="4" style="width:100%;margin-top:8px;font-size:20px;text-align:center"/>
+  </div>
+  <div style="display:flex;gap:8px;justify-content:flex-end">
+    <button class="mbtn ghost" onclick="closeModal('createServerModal')">Annuler</button>
+    <button class="mbtn acc" onclick="createServer()">Créer</button>
+  </div>
+</div>
+</div>
+
+<!-- PARAMÈTRES SERVEUR -->
+<div class="overlay" id="serverSettingsModal">
+<div class="modal">
+  <div class="mh"><h2 id="ssetTitle">⚙ Serveur</h2><button class="mclose" onclick="closeModal('serverSettingsModal')">✕</button></div>
+  <div class="settingsTabs">
+    <button class="stab active" onclick="showSServerTab('general')">Général</button>
+    <button class="stab" onclick="showSServerTab('canaux')">Canaux</button>
+    <button class="stab" onclick="showSServerTab('membres')">Membres</button>
+    <button class="stab" onclick="showSServerTab('invites')">Invites</button>
+    <button class="stab" id="ssetAdminTab" style="display:none" onclick="showSServerTab('admin')">Admin</button>
+  </div>
+
+  <!-- GÉNÉRAL -->
+  <div class="stabContent active" id="sset-general">
+    <div class="msec" id="ssetOwnerSection">
+      <h3>Modifier le serveur</h3>
+      <div class="mrow" style="margin-bottom:8px">
+        <input class="minput" id="ssetNameInp" placeholder="Nom du serveur"/>
+        <button class="mbtn acc" onclick="saveServerName()">OK</button>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px">Icône :</div>
+      <div class="emojiGrid" id="ssetEmojiGrid"></div>
+      <input class="minput" id="ssetEmojiCustom" placeholder="Emoji custom..." maxlength="4" style="width:100%;margin-top:8px;font-size:20px;text-align:center"/>
+      <button class="mbtn acc" style="margin-top:8px" onclick="saveServerIcon()">Sauvegarder l'icône</button>
+    </div>
+    <div class="msec">
+      <h3>Lien d'invitation</h3>
+      <div id="ssetInviteLink" class="nitroLinkBox"><span></span><button class="mbtn ghost" style="padding:4px 8px;font-size:11px" onclick="copyInvite()">Copier</button></div>
+    </div>
+    <div class="msec" id="ssetDangerSection">
+      <h3>Danger</h3>
+      <div style="display:flex;gap:8px">
+        <button class="mbtn danger" id="ssetLeaveBtn" onclick="leaveServer()">Quitter le serveur</button>
+        <button class="mbtn danger" id="ssetDeleteBtn" style="display:none" onclick="deleteServer()">Supprimer le serveur</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CANAUX -->
+  <div class="stabContent" id="sset-canaux">
+    <div class="msec" id="ssetCanauxOwner">
+      <h3>Ajouter un canal</h3>
+      <div class="mrow">
+        <input class="minput" id="ssetNewChan" placeholder="nom-du-canal" maxlength="20" style="font-family:monospace"/>
+        <button class="mbtn acc" onclick="addChannel()">+</button>
+      </div>
+    </div>
+    <div class="msec">
+      <h3>Canaux</h3>
+      <div id="ssetChanList"></div>
+    </div>
+  </div>
+
+  <!-- MEMBRES -->
+  <div class="stabContent" id="sset-membres">
+    <div id="ssetMemberList"></div>
+  </div>
+
+  <!-- INVITES -->
+  <div class="stabContent" id="sset-invites">
+    <div class="msec">
+      <h3>Lien d'invitation permanent</h3>
+      <div id="ssetInviteLink2" class="nitroLinkBox"><span></span><button class="mbtn ghost" style="padding:4px 8px;font-size:11px" onclick="copyInvite()">Copier</button></div>
+    </div>
+  </div>
+
+  <!-- ADMIN (nitrox seulement) -->
+  <div class="stabContent" id="sset-admin">
+    <div class="msec">
+      <h3>Générer des codes Nitro</h3>
+      <div class="mrow">
+        <input class="minput" type="number" id="nitroGenCount" value="1" min="1" max="20" style="width:70px;flex:none"/>
+        <button class="mbtn nit" onclick="adminGenNitro()">Générer</button>
+      </div>
+      <div id="generatedCodesBlock"></div>
+    </div>
+    <div class="msec">
+      <h3>Codes Nitro</h3>
+      <div id="nitroListAdmin" style="max-height:200px;overflow-y:auto"></div>
+    </div>
+    <div class="msec">
+      <h3>Tous les membres</h3>
+      <div id="adminAllUsers" style="max-height:250px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+/* ================================================================
+   CONSTANTES & ÉTAT
+================================================================ */
+const FB = 'https://chatak-47-default-rtdb.firebaseio.com';
+const ADMIN = 'nitrox';
+const HOME_SERVER = 'ak-47';
+const REACTIONS = ['👍','💀','🔥','😂','❤️','🤯','😎','💯'];
+const COLORS = ['#c8a84b','#4caf7d','#5b9cf5','#e07ac3','#5dd6b5','#e05252','#f5a742','#a594f9'];
+const SERVER_EMOJIS = ['🔫','💥','🎮','🎯','🏆','🔥','⚡','🌙','🛡️','👑','🚀','💎','🎵','🏴','⚔️','🎪'];
+
+let CU = null; // current user
+let currentServerId = HOME_SERVER;
+let currentChannel = 'general';
+let polls = {}, typingTO = null, presenceIV = null;
+let replyTo = null, mentionMatches = [], mentionIdx = -1;
+let allMembersCache = {}; // tous les users
+let vpTarget = null; // user profile target
+let currentServerData = null;
+
+/* ================================================================
+   FIREBASE
+================================================================ */
+async function fbGet(p){try{const r=await fetch(`${FB}/${p}.json`);if(!r.ok)return null;return await r.json()}catch{return null}}
+async function fbSet(p,d){try{await fetch(`${FB}/${p}.json`,{method:'PUT',body:JSON.stringify(d),headers:{'Content-Type':'application/json'}})}catch{}}
+async function fbPush(p,d){try{const r=await fetch(`${FB}/${p}.json`,{method:'POST',body:JSON.stringify(d),headers:{'Content-Type':'application/json'}});return(await r.json()).name}catch{return null}}
+async function fbDel(p){try{await fetch(`${FB}/${p}.json`,{method:'DELETE'})}catch{}}
+async function fbPatch(p,d){try{await fetch(`${FB}/${p}.json`,{method:'PATCH',body:JSON.stringify(d),headers:{'Content-Type':'application/json'}})}catch{}}
+
+function poll(path,cb,iv=1500){
+  stopPoll(path);
+  let last=null;
+  polls[path]=setInterval(async()=>{const d=await fbGet(path);const s=JSON.stringify(d);if(s!==last){last=s;cb(d)}},iv);
+  fbGet(path).then(d=>{last=JSON.stringify(d);cb(d)});
+}
+function stopPoll(p){clearInterval(polls[p]);delete polls[p]}
+
+/* ================================================================
+   HELPERS
+================================================================ */
+function color(n){let h=0;for(let c of(n||''))h=(h*31+c.charCodeAt(0))%COLORS.length;return COLORS[h]}
+function initials(n){return(n||'??').slice(0,2).toUpperCase()}
+function isAdmin(u){return(u||'').toLowerCase()===ADMIN.toLowerCase()}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function genCode(){const ch='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='AK47';for(let i=0;i<3;i++){c+='-';for(let j=0;j<4;j++)c+=ch[Math.floor(Math.random()*ch.length)]}return c}
+function slugify(s){return s.toLowerCase().replace(/[^a-z0-9-]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'')}
+function getPageBase(){return window.location.origin+window.location.pathname}
+
+function showToast(m,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=m;
+  t.style.borderColor=type==='nitro'?'rgba(155,89,245,0.5)':type==='err'?'rgba(224,82,82,0.5)':'rgba(200,168,75,0.3)';
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);
+}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.overlay').forEach(el=>el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open')}));
+
+/* ================================================================
+   TABS
+================================================================ */
+function showStab(name){
+  document.querySelectorAll('#profileModal .stab').forEach((t,i)=>{
+    const names=['profil','compte','nitro'];
+    t.classList.toggle('active',names[i]===name);
+  });
+  document.querySelectorAll('#profileModal .stabContent').forEach(c=>c.classList.remove('active'));
+  const el=document.getElementById('stab-'+name);
+  if(el)el.classList.add('active');
+  if(name==='nitro')renderNitroTab();
+  if(name==='profil')renderProfTab();
+}
+function showSServerTab(name){
+  document.querySelectorAll('#serverSettingsModal .stab').forEach(t=>{
+    t.classList.toggle('active',t.textContent.toLowerCase().includes(name)||
+      (name==='general'&&t.textContent==='Général')||
+      (name==='canaux'&&t.textContent==='Canaux')||
+      (name==='membres'&&t.textContent==='Membres')||
+      (name==='invites'&&t.textContent==='Invites')||
+      (name==='admin'&&t.textContent==='Admin'));
+  });
+  ['general','canaux','membres','invites','admin'].forEach(n=>{
+    const el=document.getElementById('sset-'+n);
+    if(el)el.classList.toggle('active',n===name);
+  });
+  if(name==='membres')loadServerMembers();
+  if(name==='canaux')loadServerChannels();
+  if(name==='admin'&&isAdmin(CU?.username)){loadAdminNitroList();loadAdminAllUsers()}
+}
+
+/* ================================================================
+   URL / INVITE DETECTION
+================================================================ */
+function getUrlParams(){
+  const p=new URLSearchParams(window.location.search);
+  return{invite:p.get('invite'),nitro:p.get('nitro'),server:p.get('server')};
+}
+
+async function checkInviteOrNitro(){
+  const{invite,nitro,server}=getUrlParams();
+  // nitro link direct
+  if(nitro){
+    // On stocke pour après login
+    sessionStorage.setItem('pendingNitro',nitro);
+  }
+  if(invite){
+    // afficher écran de join
+    const sData=await fbGet(`servers/${invite}`);
+    if(!sData){showToast('Lien invalide','err');return false}
+    document.getElementById('authScreen').style.display='none';
+    document.getElementById('joinScreen').style.display='flex';
+    document.getElementById('joinEmoji').textContent=sData.emoji||'🔫';
+    document.getElementById('joinName').textContent=sData.name||'Serveur';
+    document.getElementById('joinDesc').textContent=`${sData.memberCount||'?'} membres · Rejoins le serveur !`;
+    // si déjà connecté
+    if(CU){
+      document.getElementById('joinAuthSection').innerHTML=`
+        <button class="authBtn" onclick="joinServer('${esc(invite)}')">Rejoindre</button>
+        <div style="margin-top:10px"><a href="#" onclick="document.getElementById('joinScreen').style.display='none';document.getElementById('appScreen').style.display='flex';return false" style="color:var(--text2);font-size:12px">Continuer sans rejoindre</a></div>`;
+    } else {
+      document.getElementById('joinAuthSection').innerHTML=`
+        <p style="font-size:12px;color:var(--text2);margin-bottom:14px">Connecte-toi pour rejoindre</p>
+        <button class="authBtn" onclick="document.getElementById('joinScreen').style.display='none';document.getElementById('authScreen').style.display='flex';sessionStorage.setItem('pendingInvite','${esc(invite)}')">Se connecter</button>`;
+    }
+    return true;
+  }
+  if(server){
+    sessionStorage.setItem('pendingServer',server);
+  }
+  return false;
+}
+
+/* ================================================================
+   AUTH
+================================================================ */
+function switchAuthTab(t){
+  document.querySelectorAll('.authTab').forEach((el,i)=>el.classList.toggle('active',(t==='login'&&i===0)||(t==='register'&&i===1)));
+  document.getElementById('loginForm').style.display=t==='login'?'block':'none';
+  document.getElementById('registerForm').style.display=t==='register'?'block':'none';
+  document.getElementById('authErr').style.display='none';
+  document.getElementById('authOk').style.display='none';
+}
+function authErr(m){const e=document.getElementById('authErr');e.textContent=m;e.style.display='block';document.getElementById('authOk').style.display='none'}
+function authOk(m){const e=document.getElementById('authOk');e.textContent=m;e.style.display='block';document.getElementById('authErr').style.display='none'}
+
+async function doRegister(){
+  const user=document.getElementById('regUser').value.trim();
+  const pass=document.getElementById('regPass').value;
+  const pass2=document.getElementById('regPass2').value;
+  if(!user||user.length<2){authErr('Pseudo trop court');return}
+  if(user.length>20){authErr('Pseudo trop long');return}
+  if(!/^[a-zA-Z0-9_\-À-ÿ]+$/.test(user)){authErr('Caractères invalides');return}
+  if(!pass||pass.length<4){authErr('Mot de passe trop court');return}
+  if(pass!==pass2){authErr('Mots de passe différents');return}
+  const ex=await fbGet(`users/${user.toLowerCase()}`);
+  if(ex){authErr('Ce pseudo est déjà pris !');return}
+  await fbSet(`users/${user.toLowerCase()}`,{username:user,password:btoa(pass+'_ak47_salt'),createdAt:Date.now(),nitro:false,status:'online',statusMsg:'',servers:[HOME_SERVER]});
+  authOk('Compte créé ! Tu peux te connecter.');
+  document.getElementById('loginUser').value=user;
+  switchAuthTab('login');
+}
+
+async function doLogin(){
+  const user=document.getElementById('loginUser').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  if(!user||!pass){authErr('Remplis tous les champs');return}
+  const d=await fbGet(`users/${user.toLowerCase()}`);
+  if(!d){authErr('Pseudo introuvable');return}
+  if(d.password!==btoa(pass+'_ak47_salt')){authErr('Mot de passe incorrect');return}
+  // s'assurer que l'user est dans le serveur home
+  const servers=d.servers||[HOME_SERVER];
+  if(!servers.includes(HOME_SERVER))servers.unshift(HOME_SERVER);
+  CU={username:d.username,color:color(d.username),nitro:d.nitro||false,status:d.status||'online',statusMsg:d.statusMsg||'',servers};
+  await fbPatch(`users/${user.toLowerCase()}`,{servers});
+  localStorage.setItem('ak47_session',JSON.stringify(CU));
+  // pending invite?
+  const pi=sessionStorage.getItem('pendingInvite');
+  if(pi){sessionStorage.removeItem('pendingInvite');await joinServer(pi)}
+  // pending nitro?
+  const pn=sessionStorage.getItem('pendingNitro');
+  if(pn){sessionStorage.removeItem('pendingNitro');await claimNitroByCode(pn)}
+  launchApp();
+}
+
+function doLogout(){
+  if(CU)fbDel(`presence/${CU.username}`);
+  Object.keys(polls).forEach(stopPoll);
+  clearInterval(presenceIV);
+  CU=null;
+  localStorage.removeItem('ak47_session');
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('authScreen').style.display='flex';
+}
+
+/* ================================================================
+   LAUNCH APP
+================================================================ */
+async function launchApp(){
+  document.getElementById('authScreen').style.display='none';
+  document.getElementById('joinScreen').style.display='none';
+  document.getElementById('appScreen').style.display='flex';
+  // sidebar bottom
+  document.getElementById('myName').textContent=CU.username;
+  const ava=document.getElementById('myAvatar');
+  ava.textContent=initials(CU.username);
+  ava.style.background=CU.color;
+  renderMyBadge();
+  updateMyStatusText();
+  // presence
+  fbSet(`presence/${CU.username}`,{username:CU.username,color:CU.color,lastSeen:Date.now(),nitro:CU.nitro,status:CU.status,statusMsg:CU.statusMsg});
+  presenceIV=setInterval(()=>fbSet(`presence/${CU.username}/lastSeen`,Date.now()),15000);
+  // poll all users
+  poll('users',renderAllMembers,5000);
+  // load servers
+  await loadServers();
+  // pending server switch
+  const ps=sessionStorage.getItem('pendingServer');
+  if(ps){sessionStorage.removeItem('pendingServer');await switchServer(ps)}
+}
+
+/* ================================================================
+   SERVERS
+================================================================ */
+async function loadServers(){
+  const myServers=CU.servers||[HOME_SERVER];
+  renderServerRail(myServers);
+  // switch to home or first
+  await switchServer(currentServerId||HOME_SERVER);
+}
+
+function renderServerRail(serverIds){
+  const rail=document.getElementById('serverRail');
+  rail.innerHTML='';
+  serverIds.forEach(sid=>{
+    fbGet(`servers/${sid}`).then(sData=>{
+      if(!sData)return;
+      const el=document.createElement('div');
+      el.className='railIcon'+(sid===currentServerId?' active':'');
+      el.id='rail-'+sid;
+      el.title=sData.name;
+      el.textContent=sData.emoji||'🔫';
+      el.style.background=sid===HOME_SERVER?'var(--accent)':color(sData.name);
+      el.onclick=()=>switchServer(sid);
+      rail.appendChild(el);
+    });
+  });
+  // séparateur + bouton créer
+  const sep=document.createElement('div');sep.className='railSep';rail.appendChild(sep);
+  const add=document.createElement('div');
+  add.className='railAdd';add.textContent='+';add.title='Créer un serveur';
+  add.onclick=openCreateServer;
+  rail.appendChild(add);
+}
+
+async function switchServer(sid){
+  currentServerId=sid;
+  const sData=await fbGet(`servers/${sid}`);
+  if(!sData)return;
+  currentServerData=sData;
+  // update sidebar header
+  document.getElementById('sidebarEmoji').textContent=sData.emoji||'🔫';
+  document.getElementById('sidebarName').textContent=sData.name||sid;
+  document.title=sData.name+' — AK-47 CHAT';
+  // update rail active
+  document.querySelectorAll('.railIcon').forEach(el=>el.classList.toggle('active',el.id==='rail-'+sid));
+  // canaux
+  renderChannelList(sData);
+  // switch to first channel
+  const chans=Object.keys(sData.channels||{general:1});
+  const firstChan=chans.includes(currentChannel)?currentChannel:chans[0]||'general';
+  switchChannel(firstChan,sData);
+}
+
+function renderChannelList(sData){
+  const list=document.getElementById('channelList');
+  const chans=Object.keys(sData.channels||{general:1});
+  let html='<div class="sectionLabel">Canaux texte</div>';
+  chans.forEach(ch=>{
+    html+=`<div class="channel${ch===currentChannel?' active':''}" id="ch-${ch}" onclick="switchChannel('${esc(ch)}')"><span class="channelHash">#</span>&nbsp;${esc(ch)}</div>`;
+  });
+  // actions sidebar
+  html+=`<div style="margin-top:10px"><div class="sectionLabel">Actions</div>
+    <div class="channel" onclick="openNitroClaim()">💎&nbsp;Claim Nitro</div>
+    ${isAdmin(CU?.username)?`<div class="channel" onclick="openServerSettings();showSServerTab('admin')">🛡️&nbsp;Admin Panel</div>`:''}
+  </div>`;
+  list.innerHTML=html;
+}
+
+async function switchChannel(ch, sData){
+  currentChannel=ch;
+  if(!sData)sData=await fbGet(`servers/${currentServerId}`);
+  document.querySelectorAll('.channel').forEach(el=>el.classList.remove('active'));
+  const el=document.getElementById('ch-'+ch);
+  if(el)el.classList.add('active');
+  document.getElementById('channelName').textContent=ch.toUpperCase();
+  document.getElementById('channelDesc').textContent=(sData?.channels?.[ch]?.desc)||'';
+  document.getElementById('msgInput').placeholder=`Envoyer dans #${ch}`;
+  document.getElementById('messages').innerHTML='<div class="loadingMsg"><div class="spinner"></div>Chargement...</div>';
+  Object.keys(polls).filter(p=>p.startsWith('servers/'+currentServerId+'/channels/')).forEach(stopPoll);
+  poll(`servers/${currentServerId}/channels/${ch}/messages`,renderMessages,1500);
+  poll(`servers/${currentServerId}/channels/${ch}/typing`,renderTyping,800);
+  replyTo=null;
+  document.getElementById('replyBarSlot').innerHTML='';
+}
+
+/* ================================================================
+   CREATE SERVER
+================================================================ */
+let csSelectedEmoji='🎮';
+function openCreateServer(){
+  csSelectedEmoji='🎮';
+  const grid=document.getElementById('csEmojiGrid');
+  grid.innerHTML=SERVER_EMOJIS.map(e=>`<div class="emojiOpt${e===csSelectedEmoji?' sel':''}" onclick="selectCsEmoji('${e}')">${e}</div>`).join('');
+  document.getElementById('csName').value='';
+  document.getElementById('csSlug').value='';
+  document.getElementById('csEmojiCustom').value='';
+  openModal('createServerModal');
+}
+function selectCsEmoji(e){
+  csSelectedEmoji=e;
+  document.querySelectorAll('#csEmojiGrid .emojiOpt').forEach(el=>el.classList.toggle('sel',el.textContent===e));
+  document.getElementById('csEmojiCustom').value='';
+}
+async function createServer(){
+  const name=document.getElementById('csName').value.trim();
+  let slug=document.getElementById('csSlug').value.trim();
+  const customEmoji=document.getElementById('csEmojiCustom').value.trim();
+  const emoji=customEmoji||csSelectedEmoji;
+  if(!name){showToast('Donne un nom au serveur','err');return}
+  if(!slug)slug=slugify(name);
+  slug=slugify(slug);
+  if(!slug||slug.length<2){showToast('URL invalide (min 2 caractères)','err');return}
+  if(slug===HOME_SERVER){showToast('Cette URL est réservée','err');return}
+  const ex=await fbGet(`servers/${slug}`);
+  if(ex){showToast('Cette URL est déjà prise !','err');return}
+  const sData={
+    name,emoji,slug,
+    owner:CU.username,
+    createdAt:Date.now(),
+    channels:{general:{desc:'Canal général',order:0}},
+    members:{[CU.username]:true},
+    memberCount:1
+  };
+  await fbSet(`servers/${slug}`,sData);
+  // ajouter à l'user
+  if(!CU.servers.includes(slug))CU.servers.push(slug);
+  await fbPatch(`users/${CU.username.toLowerCase()}`,{servers:CU.servers});
+  localStorage.setItem('ak47_session',JSON.stringify(CU));
+  closeModal('createServerModal');
+  showToast('Serveur "'+name+'" créé !');
+  renderServerRail(CU.servers);
+  await switchServer(slug);
+}
+
+/* ================================================================
+   JOIN SERVER
+================================================================ */
+async function joinServer(slug){
+  const sData=await fbGet(`servers/${slug}`);
+  if(!sData){showToast('Serveur introuvable','err');return}
+  if(slug===HOME_SERVER){showToast('Tu es déjà dans AK-47 !');return}
+  if(!CU.servers.includes(slug)){
+    CU.servers.push(slug);
+    await fbPatch(`users/${CU.username.toLowerCase()}`,{servers:CU.servers});
+    localStorage.setItem('ak47_session',JSON.stringify(CU));
+  }
+  await fbSet(`servers/${slug}/members/${CU.username}`,true);
+  await fbPatch(`servers/${slug}`,{memberCount:(sData.memberCount||0)+1});
+  renderServerRail(CU.servers);
+  await switchServer(slug);
+  showToast('Tu as rejoint "'+sData.name+'" !');
+  document.getElementById('joinScreen').style.display='none';
+  document.getElementById('appScreen').style.display='flex';
+}
+
+async function leaveServer(){
+  if(currentServerId===HOME_SERVER){showToast('Tu ne peux pas quitter AK-47 !','err');return}
+  const sData=await fbGet(`servers/${currentServerId}`);
+  if(!sData)return;
+  if(sData.owner===CU.username){showToast('Supprime d\'abord le serveur ou transfère-le.','err');return}
+  if(!confirm(`Quitter "${sData.name}" ?`))return;
+  CU.servers=CU.servers.filter(s=>s!==currentServerId);
+  await fbPatch(`users/${CU.username.toLowerCase()}`,{servers:CU.servers});
+  localStorage.setItem('ak47_session',JSON.stringify(CU));
+  await fbDel(`servers/${currentServerId}/members/${CU.username}`);
+  closeModal('serverSettingsModal');
+  renderServerRail(CU.servers);
+  await switchServer(HOME_SERVER);
+}
+
+async function deleteServer(){
+  if(!isAdmin(CU?.username)&&currentServerData?.owner!==CU?.username){showToast('Non autorisé','err');return}
+  if(currentServerId===HOME_SERVER){showToast('Impossible de supprimer AK-47','err');return}
+  if(!confirm('Supprimer définitivement ce serveur ?'))return;
+  await fbDel(`servers/${currentServerId}`);
+  CU.servers=CU.servers.filter(s=>s!==currentServerId);
+  await fbPatch(`users/${CU.username.toLowerCase()}`,{servers:CU.servers});
+  localStorage.setItem('ak47_session',JSON.stringify(CU));
+  closeModal('serverSettingsModal');
+  renderServerRail(CU.servers);
+  await switchServer(HOME_SERVER);
+}
+
+/* ================================================================
+   SERVER SETTINGS
+================================================================ */
+async function openServerSettings(){
+  const sData=await fbGet(`servers/${currentServerId}`);
+  if(!sData)return;
+  currentServerData=sData;
+  const isOwner=sData.owner===CU?.username||isAdmin(CU?.username);
+  document.getElementById('ssetTitle').textContent='⚙ '+sData.name;
+  document.getElementById('ssetNameInp').value=sData.name;
+  document.getElementById('ssetEmojiCustom').value='';
+  // emoji grid
+  const grid=document.getElementById('ssetEmojiGrid');
+  grid.innerHTML=SERVER_EMOJIS.map(e=>`<div class="emojiOpt${e===sData.emoji?' sel':''}" onclick="selectSsetEmoji('${e}')">${e}</div>`).join('');
+  // show/hide owner sections
+  document.getElementById('ssetOwnerSection').style.display=isOwner?'block':'none';
+  document.getElementById('ssetCanauxOwner').style.display=isOwner?'block':'none';
+  // invite link
+  const inviteUrl=getPageBase()+'?invite='+currentServerId;
+  document.querySelectorAll('#ssetInviteLink span,#ssetInviteLink2 span').forEach(el=>el.textContent=inviteUrl);
+  // leave/delete
+  document.getElementById('ssetLeaveBtn').style.display=currentServerId===HOME_SERVER?'none':'';
+  document.getElementById('ssetDeleteBtn').style.display=isOwner&&currentServerId!==HOME_SERVER?'':'none';
+  // admin tab
+  document.getElementById('ssetAdminTab').style.display=isAdmin(CU?.username)?'':'none';
+  // reset to general tab
+  showSServerTab('general');
+  openModal('serverSettingsModal');
+}
+
+let ssetSelectedEmoji=null;
+function selectSsetEmoji(e){
+  ssetSelectedEmoji=e;
+  document.querySelectorAll('#ssetEmojiGrid .emojiOpt').forEach(el=>el.classList.toggle('sel',el.textContent===e));
+  document.getElementById('ssetEmojiCustom').value='';
+}
+async function saveServerName(){
+  const name=document.getElementById('ssetNameInp').value.trim();
+  if(!name){showToast('Nom vide','err');return}
+  await fbPatch(`servers/${currentServerId}`,{name});
+  document.getElementById('sidebarName').textContent=name;
+  document.title=name+' — AK-47 CHAT';
+  showToast('Nom mis à jour');
+}
+async function saveServerIcon(){
+  const custom=document.getElementById('ssetEmojiCustom').value.trim();
+  const emoji=custom||ssetSelectedEmoji;
+  if(!emoji){showToast('Choisis un emoji','err');return}
+  await fbPatch(`servers/${currentServerId}`,{emoji});
+  document.getElementById('sidebarEmoji').textContent=emoji;
+  renderServerRail(CU.servers);
+  showToast('Icône mise à jour');
+}
+function copyInvite(){
+  const url=getPageBase()+'?invite='+currentServerId;
+  navigator.clipboard.writeText(url).then(()=>showToast('Lien copié !'));
+}
+async function loadServerChannels(){
+  const sData=await fbGet(`servers/${currentServerId}`);
+  const chans=Object.entries(sData?.channels||{});
+  const isOwner=sData?.owner===CU?.username||isAdmin(CU?.username);
+  document.getElementById('ssetChanList').innerHTML=chans.map(([ch,d])=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--border);border-radius:7px;margin-bottom:5px">
+      <span style="color:var(--accent);font-weight:700">#</span>
+      <span style="flex:1;font-size:13px">${esc(ch)}</span>
+      ${isOwner&&ch!=='general'?`<button class="mbtn danger" style="padding:3px 8px;font-size:11px" onclick="deleteChannel('${esc(ch)}')">✕</button>`:''}
+    </div>`).join('');
+}
+async function addChannel(){
+  let name=document.getElementById('ssetNewChan').value.trim().toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+  if(!name){showToast('Nom invalide','err');return}
+  await fbSet(`servers/${currentServerId}/channels/${name}`,{desc:'',order:Date.now()});
+  document.getElementById('ssetNewChan').value='';
+  const sData=await fbGet(`servers/${currentServerId}`);
+  renderChannelList(sData);
+  loadServerChannels();
+  showToast('#'+name+' créé');
+}
+async function deleteChannel(ch){
+  if(!confirm('Supprimer #'+ch+' ?'))return;
+  await fbDel(`servers/${currentServerId}/channels/${ch}`);
+  const sData=await fbGet(`servers/${currentServerId}`);
+  renderChannelList(sData);
+  loadServerChannels();
+  if(currentChannel===ch)switchChannel('general');
+}
+async function loadServerMembers(){
+  const allUsers=await fbGet('users');
+  if(!allUsers)return;
+  const sData=await fbGet(`servers/${currentServerId}`);
+  const serverMembers=Object.keys(sData?.members||{});
+  const isOwner=sData?.owner===CU?.username||isAdmin(CU?.username);
+  document.getElementById('ssetMemberList').innerHTML=serverMembers.map(uname=>{
+    const u=allUsers[uname.toLowerCase()]||{username:uname};
+    return`<div class="adminRow">
+      <div class="memberAva" style="background:${color(uname)}">${initials(uname)}</div>
+      <div class="aname">${esc(uname)}${isAdmin(uname)?'<span class="badge badge-admin">ADMIN</span>':''}${u.nitro?'<span class="badge badge-nitro">NITRO</span>':''}${sData.owner===uname?'<span class="badge badge-owner">OWNER</span>':''}</div>
+      ${isOwner&&uname!==CU.username?`<button class="mbtn danger adminRowBtns" style="padding:3px 8px;font-size:11px" onclick="kickFromServer('${esc(uname)}')">Kick</button>`:''}
+    </div>`;
+  }).join('');
+}
+async function kickFromServer(uname){
+  if(!confirm('Expulser '+uname+' du serveur ?'))return;
+  await fbDel(`servers/${currentServerId}/members/${uname}`);
+  const ud=await fbGet(`users/${uname.toLowerCase()}`);
+  if(ud){const s=(ud.servers||[]).filter(x=>x!==currentServerId);await fbPatch(`users/${uname.toLowerCase()}`,{servers:s})}
+  showToast(uname+' expulsé');
+  loadServerMembers();
+}
+
+/* ================================================================
+   MEMBERS PANEL (tous les users, online/offline)
+================================================================ */
+function renderAllMembers(data){
+  if(!data)return;
+  allMembersCache={};
+  const now=Date.now();
+  Object.values(data).forEach(u=>{allMembersCache[u.username]=u});
+  // présence
+  fbGet('presence').then(presence=>{
+    const onlineUsernames=presence?Object.keys(presence).filter(u=>{const p=presence[u];return p&&now-p.lastSeen<60000}):[];
+    const allNames=Object.keys(data).map(k=>data[k].username);
+    const online=allNames.filter(u=>onlineUsernames.includes(u));
+    const offline=allNames.filter(u=>!onlineUsernames.includes(u));
+    let html='';
+    if(online.length){
+      html+=`<div class="memberGroup"><div class="memberGroupLabel">En ligne — ${online.length}</div>`;
+      online.forEach(u=>{
+        const ud=data[u.toLowerCase()]||{};
+        const s=presence?.[u]?.status||'online';
+        html+=memberRowHtml(u,ud,s,false);
+      });
+      html+='</div>';
+    }
+    if(offline.length){
+      html+=`<div class="memberGroup"><div class="memberGroupLabel">Hors ligne — ${offline.length}</div>`;
+      offline.forEach(u=>{
+        const ud=data[u.toLowerCase()]||{};
+        html+=memberRowHtml(u,ud,'offline',true);
+      });
+      html+='</div>';
+    }
+    document.getElementById('membersList').innerHTML=html||'<div style="font-size:11px;color:var(--text3)">Aucun membre</div>';
+    document.getElementById('onlineCount').textContent=`${online.length} en ligne`;
+  });
+}
+function memberRowHtml(uname,ud,status,offline){
+  return`<div class="memberRow" onclick="openUserProfile('${esc(uname)}')">
+    <div class="memberAva s-${status}" style="background:${color(uname)}">${initials(uname)}</div>
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;align-items:center;gap:3px">
+        <span class="memberName${offline?' offline':''}">${esc(uname)}</span>
+        ${isAdmin(uname)?'<span style="font-size:9px">🛡️</span>':''}
+        ${ud.nitro?'<span style="font-size:9px">💎</span>':''}
+      </div>
+      ${ud.statusMsg&&!offline?`<div style="font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(ud.statusMsg)}</div>`:''}
+    </div>
+  </div>`;
+}
+
+/* ================================================================
+   MESSAGES
+================================================================ */
+function fmtText(raw){
+  let t=esc(raw);
+  t=t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  t=t.replace(/\*(.+?)\*/g,'<em>$1</em>');
+  t=t.replace(/`([^`]+)`/g,'<code>$1</code>');
+  t=t.replace(/@([a-zA-Z0-9_\-À-ÿ]+)/g,'<span class="mention">@$1</span>');
+  t=t.replace(/(https?:\/\/\S+\.(png|jpg|jpeg|gif|webp)(\?\S*)?)/gi,'<img class="imgPreview" src="$1" onerror="this.style.display=\'none\'"/>');
+  return t;
+}
+
+function renderMessages(data){
+  const c=document.getElementById('messages');
+  const atBot=c.scrollHeight-c.scrollTop-c.clientHeight<80;
+  if(!data||Object.keys(data).length===0){
+    c.innerHTML=`<div class="systemMsg"><span>Bienvenue sur #${esc(currentChannel)} 🔫</span></div>`;
+    return;
+  }
+  const msgs=Object.entries(data).sort((a,b)=>a[1].ts-b[1].ts);
+  let html='',prev=null;
+  msgs.forEach(([id,m])=>{
+    if(m.type==='system'){html+=`<div class="systemMsg"><span>${esc(m.text)}</span></div>`;prev=null;return}
+    const c2=color(m.author);
+    const t=new Date(m.ts).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    const showMeta=prev!==m.author;
+    const canDel=CU&&(m.author===CU.username||isAdmin(CU.username));
+    // reactions
+    let rHtml='';
+    if(m.reactions){
+      const re=Object.entries(m.reactions).filter(([,u])=>Object.keys(u).length>0);
+      if(re.length){
+        rHtml='<div class="reactions">';
+        re.forEach(([emoji,users])=>{
+          const cnt=Object.keys(users).length;
+          const mine=CU&&users[CU.username];
+          rHtml+=`<div class="reaction${mine?' mine':''}" onclick="toggleReact('${esc(id)}','${esc(emoji)}')">${emoji}<span>${cnt}</span></div>`;
+        });
+        rHtml+='</div>';
+      }
+    }
+    // reply
+    let rpHtml='';
+    if(m.replyTo)rpHtml=`<div class="replyPreview">↩ <strong style="color:${color(m.replyTo.author)}">${esc(m.replyTo.author)}</strong>: ${esc((m.replyTo.text||'').slice(0,60))}</div>`;
+    // author badges
+    let abadge='';
+    if(isAdmin(m.author))abadge+='<span class="badge badge-admin">ADMIN</span>';
+
+    html+=`<div class="msgGroup" id="msg-${id}">
+      <div class="msgAva" style="background:${c2};visibility:${showMeta?'visible':'hidden'}" onclick="openUserProfile('${esc(m.author)}')">${initials(m.author)}</div>
+      <div class="msgContent">
+        ${showMeta?`<div class="msgMeta"><span class="msgAuthor" style="color:${c2}" onclick="openUserProfile('${esc(m.author)}')">${esc(m.author)}</span>${abadge}<span class="msgTime">${t}</span></div>`:''}
+        ${rpHtml}
+        <div class="msgText">${fmtText(m.text)}</div>
+        ${rHtml}
+      </div>
+      <div class="msgActions">
+        <div id="rp-${id}" style="display:none;position:absolute;right:0;top:28px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:5px 7px;display:none;gap:4px;z-index:100">
+          ${REACTIONS.map(e=>`<span style="font-size:17px;cursor:pointer" onclick="toggleReact('${id}','${e}');document.getElementById('rp-${id}').style.display='none'">${e}</span>`).join('')}
+        </div>
+        <button class="msgActionBtn" onclick="toggleRp('${id}')">😊</button>
+        <button class="msgActionBtn" onclick="setReply('${id}','${esc(m.author)}','${esc((m.text||'').slice(0,80))}')">↩</button>
+        ${canDel?`<button class="msgActionBtn del" onclick="delMsg('${id}')">🗑️</button>`:''}
+      </div>
+    </div>`;
+    prev=m.author;
+  });
+  c.innerHTML=html;
+  if(atBot)c.scrollTop=c.scrollHeight;
+}
+
+function toggleRp(id){
+  const el=document.getElementById('rp-'+id);
+  document.querySelectorAll('[id^="rp-"]').forEach(e=>{if(e.id!=='rp-'+id)e.style.display='none'});
+  el.style.display=el.style.display==='none'?'flex':'none';
+}
+async function toggleReact(id,emoji){
+  if(!CU)return;
+  const p=`servers/${currentServerId}/channels/${currentChannel}/messages/${id}/reactions/${encodeURIComponent(emoji)}/${CU.username}`;
+  const ex=await fbGet(p);
+  if(ex)await fbDel(p);else await fbSet(p,true);
+}
+function setReply(id,author,text){
+  replyTo={id,author,text};
+  document.getElementById('replyBarSlot').innerHTML=`<div class="replyBar"><span>↩ Répondre à <strong>${esc(author)}</strong>: ${esc(text.slice(0,60))}</span><button onclick="cancelReply()">✕</button></div>`;
+  document.getElementById('msgInput').focus();
+}
+function cancelReply(){replyTo=null;document.getElementById('replyBarSlot').innerHTML=''}
+async function delMsg(id){
+  await fbDel(`servers/${currentServerId}/channels/${currentChannel}/messages/${id}`);
+  showToast('Message supprimé');
+}
+
+/* ================================================================
+   TYPING + SEND
+================================================================ */
+function renderTyping(data){
+  if(!data||!CU)return;
+  const now=Date.now();
+  const ty=Object.entries(data).filter(([u,v])=>u!==CU.username&&v.ts&&now-v.ts<4000).map(([u])=>u);
+  const el=document.getElementById('typingIndicator');
+  if(!ty.length)el.textContent='';
+  else if(ty.length===1)el.textContent=`${ty[0]} est en train d'écrire...`;
+  else el.textContent=ty.slice(0,-1).join(', ')+' et '+ty[ty.length-1]+' écrivent...';
+}
+async function sendMessage(){
+  const inp=document.getElementById('msgInput');
+  const text=inp.value.trim();
+  if(!text||!CU)return;
+  inp.value='';
+  hideMentions();
+  clearTyping();
+  const msg={author:CU.username,text,ts:Date.now()};
+  if(replyTo)msg.replyTo={id:replyTo.id,author:replyTo.author,text:replyTo.text};
+  cancelReply();
+  await fbPush(`servers/${currentServerId}/channels/${currentChannel}/messages`,msg);
+}
+function onTyping(){
+  if(!CU)return;
+  fbSet(`servers/${currentServerId}/channels/${currentChannel}/typing/${CU.username}`,{ts:Date.now()});
+  clearTimeout(typingTO);
+  typingTO=setTimeout(clearTyping,3500);
+}
+function clearTyping(){if(CU)fbSet(`servers/${currentServerId}/channels/${currentChannel}/typing/${CU.username}`,{ts:0})}
+
+/* mention */
+function onMentionInput(){
+  const v=document.getElementById('msgInput').value;
+  const at=v.lastIndexOf('@');
+  if(at===-1){hideMentions();return}
+  const q=v.slice(at+1).toLowerCase();
+  if(q.includes(' ')){hideMentions();return}
+  mentionMatches=Object.keys(allMembersCache).filter(u=>u.toLowerCase().startsWith(q)&&u!==CU?.username);
+  if(!mentionMatches.length){hideMentions();return}
+  mentionIdx=-1;
+  const list=document.getElementById('mentionList');
+  list.style.display='block';
+  list.innerHTML=mentionMatches.slice(0,6).map((u,i)=>`
+    <div class="mentionItem" id="mi-${i}" onclick="insertMention('${esc(u)}')">
+      <div class="mentionAva" style="background:${color(u)}">${initials(u)}</div>@${esc(u)}
+    </div>`).join('');
+}
+function hideMentions(){mentionMatches=[];mentionIdx=-1;document.getElementById('mentionList').style.display='none'}
+function insertMention(u){
+  const inp=document.getElementById('msgInput');
+  const v=inp.value;
+  inp.value=v.slice(0,v.lastIndexOf('@'))+'@'+u+' ';
+  hideMentions();inp.focus();
+}
+function handleKey(e){
+  if(e.key==='Enter'&&!e.shiftKey){
+    if(mentionMatches.length&&mentionIdx>=0){e.preventDefault();insertMention(mentionMatches[mentionIdx]);return}
+    e.preventDefault();sendMessage();
+  }
+  if(e.key==='ArrowDown'&&mentionMatches.length){e.preventDefault();mentionIdx=Math.min(mentionIdx+1,mentionMatches.length-1);document.querySelectorAll('.mentionItem').forEach((el,i)=>el.classList.toggle('sel',i===mentionIdx))}
+  if(e.key==='ArrowUp'&&mentionMatches.length){e.preventDefault();mentionIdx=Math.max(mentionIdx-1,0);document.querySelectorAll('.mentionItem').forEach((el,i)=>el.classList.toggle('sel',i===mentionIdx))}
+  if(e.key==='Escape')hideMentions();
+}
+
+/* ================================================================
+   PROFIL
+================================================================ */
+function renderMyBadge(){
+  let h='';
+  if(isAdmin(CU.username))h+='<span class="badge badge-admin">ADMIN</span>';
+  if(CU.nitro)h+='<span class="badge badge-nitro">NITRO</span>';
+  document.getElementById('myBadge').innerHTML=h;
+}
+function updateMyStatusText(){
+  const el=document.getElementById('myStatusText');
+  const s=CU.status||'online';
+  const colors={online:'var(--green)',away:'#f5a742',dnd:'var(--red)'};
+  const labels={online:'● en ligne',away:'● AFK',dnd:'● DND'};
+  el.style.color=colors[s];
+  el.textContent=CU.statusMsg?'● '+CU.statusMsg:labels[s];
+}
+
+function renderProfTab(){
+  document.getElementById('myProfAva').style.background=CU.color;
+  document.getElementById('myProfAva').textContent=initials(CU.username);
+  document.getElementById('myProfName').textContent=CU.username;
+  let b='';
+  if(isAdmin(CU.username))b+='<span class="badge badge-admin">ADMIN</span>';
+  if(CU.nitro)b+='<span class="badge badge-nitro">NITRO</span>';
+  document.getElementById('myProfBadges').innerHTML=b;
+  fbGet(`users/${CU.username.toLowerCase()}`).then(d=>{
+    if(d?.createdAt)document.getElementById('myProfJoined').textContent='Membre depuis '+new Date(d.createdAt).toLocaleDateString('fr-FR');
+  });
+  document.getElementById('statusMsgInp').value=CU.statusMsg||'';
+  ['online','away','dnd'].forEach(s=>document.getElementById('so-'+s).classList.toggle('sel',s===(CU.status||'online')));
+}
+
+function openMyProfile(){
+  renderProfTab();
+  showStab('profil');
+  openModal('profileModal');
+}
+
+function setStatus(s){
+  CU.status=s;
+  ['online','away','dnd'].forEach(x=>document.getElementById('so-'+x).classList.toggle('sel',x===s));
+  fbPatch(`users/${CU.username.toLowerCase()}`,{status:s});
+  fbSet(`presence/${CU.username}/status`,s);
+  localStorage.setItem('ak47_session',JSON.stringify(CU));
+  updateMyStatusText();
+}
+function saveStatusMsg(){
+  const m=document.getElementById('statusMsgInp').value.trim().slice(0,60);
+  CU.statusMsg=m;
+  fbPatch(`users/${CU.username.toLowerCase()}`,{statusMsg:m});
+  fbSet(`presence/${CU.username}/statusMsg`,m);
+  localStorage.setItem('ak47_session',JSON.stringify(CU));
+  updateMyStatusText();
+  showToast('Statut mis à jour !');
+}
+async function changeName(){
+  const n=document.getElementById('changeNameInp').value.trim();
+  if(!n||n.length<2){showToast('Trop court','err');return}
+  if(!/^[a-zA-Z0-9_\-À-ÿ]+$/.test(n)){showToast('Caractères invalides','err');return}
+  if(n.toLowerCase()===CU.username.toLowerCase()){showToast('C\'est déjà ton pseudo','err');return}
+  const ex=await fbGet(`users/${n.toLowerCase()}`);
+  if(ex){showToast('Pseudo déjà pris !','err');return}
+  const old=await fbGet(`users/${CU.username.toLowerCase()}`);
+  await fbSet(`users/${n.toLowerCase()}`,{...old,username:n});
+  await fbDel(`users/${CU.username.toLowerCase()}`);
+  CU.username=n;CU.color=color(n);
+  localStorage.setItem('ak47_session',JSON.stringify(CU));
+  document.getElementById('myName').textContent=n;
+  document.getElementById('myAvatar').textContent=initials(n);
+  document.getElementById('myAvatar').style.background=CU.color;
+  renderMyBadge();renderProfTab();
+  showToast('Pseudo changé en '+n);
+}
+async function changePass(){
+  const op=document.getElementById('oldPassInp').value;
+  const np=document.getElementById('newPassInp').value;
+  if(!op||!np){showToast('Remplis les deux champs','err');return}
+  if(np.length<4){showToast('Trop court','err');return}
+  const d=await fbGet(`users/${CU.username.toLowerCase()}`);
+  if(d.password!==btoa(op+'_ak47_salt')){showToast('Ancien mot de passe incorrect','err');return}
+  await fbPatch(`users/${CU.username.toLowerCase()}`,{password:btoa(np+'_ak47_salt')});
+  showToast('Mot de passe changé !');
+  document.getElementById('oldPassInp').value='';document.getElementById('newPassInp').value='';
+}
+async function deleteMyAccount(){
+  if(!confirm('Supprimer définitivement ton compte ?'))return;
+  doLogout();
+  await fbDel(`users/${CU?.username?.toLowerCase()}`);
+  showToast('Compte supprimé');
+}
+
+/* ================================================================
+   PROFIL AUTRE USER
+================================================================ */
+async function openUserProfile(uname){
+  if(uname===CU?.username){openMyProfile();return}
+  vpTarget=uname;
+  const ud=await fbGet(`users/${uname.toLowerCase()}`)||{};
+  document.getElementById('uProfAva').style.background=color(uname);
+  document.getElementById('uProfAva').textContent=initials(uname);
+  document.getElementById('uProfName').textContent=uname;
+  let b='';
+  if(isAdmin(uname))b+='<span class="badge badge-admin">ADMIN</span>';
+  if(ud.nitro)b+='<span class="badge badge-nitro">NITRO</span>';
+  document.getElementById('uProfBadges').innerHTML=b;
+  document.getElementById('uProfStatusMsg').textContent=ud.statusMsg||'';
+  document.getElementById('uProfJoined').textContent=ud.createdAt?'Membre depuis '+new Date(ud.createdAt).toLocaleDateString('fr-FR'):'';
+  const adm=document.getElementById('uAdminSection');
+  if(isAdmin(CU?.username)){
+    adm.style.display='block';
+    document.getElementById('uGrantNitroBtn').style.display=ud.nitro?'none':'';
+    document.getElementById('uRevokeNitroBtn').style.display=ud.nitro?'':'none';
+  } else adm.style.display='none';
+  openModal('userModal');
+}
+async function adminGrantNitro(){
+  if(!vpTarget)return;
+  await fbPatch(`users/${vpTarget.toLowerCase()}`,{nitro:true});
+  showToast('Nitro donné à '+vpTarget,'nitro');
+  closeModal('userModal');
+}
+async function adminRevokeNitro(){
+  if(!vpTarget)return;
+  await fbPatch(`users/${vpTarget.toLowerCase()}`,{nitro:false});
+  showToast('Nitro retiré');
+  closeModal('userModal');
+}
+async function adminDeleteUser(){
+  if(!vpTarget)return;
+  if(!confirm('Supprimer le compte de '+vpTarget+' ?'))return;
+  await fbDel(`users/${vpTarget.toLowerCase()}`);
+  showToast('Compte supprimé');
+  closeModal('userModal');
+}
+
+/* ================================================================
+   NITRO
+================================================================ */
+function renderNitroTab(){
+  const el=document.getElementById('nitroStatusBlock');
+  if(CU.nitro){
+    el.innerHTML=`<div style="background:rgba(155,89,245,0.1);border:1px solid rgba(155,89,245,0.3);border-radius:10px;padding:14px;margin-bottom:16px;text-align:center">
+      <div style="font-size:28px;margin-bottom:6px">💎</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--nitro2)">NITRO ACTIF</div>
+      <div style="font-size:11px;color:var(--text2);margin-top:3px">Tu bénéficies du badge Nitro premium</div>
+    </div>`;
+  } else {
+    el.innerHTML=`<div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:16px;text-align:center">
+      <div style="font-size:28px;margin-bottom:6px">⬜</div>
+      <div style="font-size:13px;color:var(--text2)">Pas de Nitro actif. Entre un code pour l'activer.</div>
+    </div>`;
+  }
+}
+function openNitroClaim(){
+  showStab('nitro');
+  openModal('profileModal');
+}
+async function claimNitro(){
+  const code=document.getElementById('nitroClaimInp').value.trim().toUpperCase();
+  await claimNitroByCode(code);
+}
+async function claimNitroByCode(code){
+  if(!code){showToast('Entre un code','err');return}
+  const d=await fbGet(`nitro/${code}`);
+  if(!d){showToast('Code invalide ❌','err');return}
+  if(d.claimed){showToast('Code déjà utilisé ❌','err');return}
+  await fbPatch(`nitro/${code}`,{claimed:true,claimedBy:CU.username,claimedAt:Date.now()});
+  await fbPatch(`users/${CU.username.toLowerCase()}`,{nitro:true});
+  CU.nitro=true;
+  localStorage.setItem('ak47_session',JSON.stringify(CU));
+  renderMyBadge();
+  fbSet(`presence/${CU.username}/nitro`,true);
+  showToast('💎 Nitro activé !','nitro');
+  renderNitroTab();
+  closeModal('profileModal');
+}
+
+/* ================================================================
+   ADMIN
+================================================================ */
+async function adminGenNitro(){
+  const n=Math.min(20,Math.max(1,parseInt(document.getElementById('nitroGenCount').value)||1));
+  const codes=[];
+  for(let i=0;i<n;i++){
+    const code=genCode();
+    await fbSet(`nitro/${code}`,{code,claimed:false,createdAt:Date.now(),createdBy:CU.username});
+    codes.push(code);
+  }
+  const base=getPageBase();
+  document.getElementById('generatedCodesBlock').innerHTML=codes.map(c=>{
+    const link=`${base}?nitro=${c}`;
+    return`<div class="nitroCodeBox">
+      <div>
+        <div style="font-size:12px;color:var(--nitro2);letter-spacing:1px">${c}</div>
+        <div class="nitroLinkBox" style="margin-top:4px;padding:4px 8px">
+          <span>${link}</span>
+          <button onclick="navigator.clipboard.writeText('${link}');showToast('Lien copié !')" style="background:none;border:none;color:var(--text2);cursor:pointer;white-space:nowrap">📋 Copier</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  loadAdminNitroList();
+}
+async function loadAdminNitroList(){
+  const data=await fbGet('nitro');
+  const el=document.getElementById('nitroListAdmin');
+  if(!data){el.innerHTML='<div style="font-size:12px;color:var(--text3)">Aucun code</div>';return}
+  const items=Object.entries(data).sort((a,b)=>b[1].createdAt-a[1].createdAt);
+  el.innerHTML=items.map(([code,d])=>`
+    <div class="nitroItem${d.claimed?' claimed':''}">
+      <span class="nicode">${code}</span>
+      <span class="nistat${d.claimed?' ok':''}">${d.claimed?'✓ '+d.claimedBy:'Disponible'}</span>
+      ${!d.claimed?`<button class="msgActionBtn del" onclick="adminDelNitro('${code}')">✕</button>`:''}
+    </div>`).join('');
+}
+async function adminDelNitro(code){await fbDel(`nitro/${code}`);loadAdminNitroList()}
+async function loadAdminAllUsers(){
+  const data=await fbGet('users');
+  if(!data){document.getElementById('adminAllUsers').innerHTML='';return}
+  const users=Object.values(data).sort((a,b)=>a.username.localeCompare(b.username));
+  document.getElementById('adminAllUsers').innerHTML=users.map(u=>`
+    <div class="adminRow">
+      <div class="memberAva" style="background:${color(u.username)};width:28px;height:28px;font-size:10px">${initials(u.username)}</div>
+      <div class="aname">${esc(u.username)}${isAdmin(u.username)?'<span class="badge badge-admin">ADMIN</span>':''}${u.nitro?'<span class="badge badge-nitro">NITRO</span>':''}</div>
+      <div class="adminRowBtns">
+        ${!u.nitro?`<button class="mbtn nit" style="padding:3px 8px;font-size:10px" onclick="adminGrantNitroDirect('${esc(u.username)}')">+Nitro</button>`:`<button class="mbtn danger" style="padding:3px 8px;font-size:10px" onclick="adminRevokeNitroDirect('${esc(u.username)}')">-Nitro</button>`}
+        ${!isAdmin(u.username)?`<button class="mbtn danger" style="padding:3px 8px;font-size:10px" onclick="adminDelUserDirect('${esc(u.username)}')">🗑️</button>`:''}
+      </div>
+    </div>`).join('');
+}
+async function adminGrantNitroDirect(u){await fbPatch(`users/${u.toLowerCase()}`,{nitro:true});showToast('Nitro donné à '+u,'nitro');loadAdminAllUsers()}
+async function adminRevokeNitroDirect(u){await fbPatch(`users/${u.toLowerCase()}`,{nitro:false});showToast('Nitro retiré');loadAdminAllUsers()}
+async function adminDelUserDirect(u){if(!confirm('Supprimer '+u+' ?'))return;await fbDel(`users/${u.toLowerCase()}`);showToast('Compte supprimé');loadAdminAllUsers()}
+
+/* ================================================================
+   INIT HOME SERVER (créer si pas existant)
+================================================================ */
+async function ensureHomeServer(){
+  const ex=await fbGet(`servers/${HOME_SERVER}`);
+  if(!ex){
+    await fbSet(`servers/${HOME_SERVER}`,{
+      name:'AK-47 CHAT',emoji:'🔫',slug:HOME_SERVER,
+      owner:ADMIN,createdAt:Date.now(),
+      channels:{
+        general:{desc:'Canal général',order:0},
+        memes:{desc:'Partage tes mèmes',order:1},
+        code:{desc:'Questions de code',order:2},
+        gaming:{desc:'Talk gaming',order:3},
+        offtopic:{desc:'Tout et n\'importe quoi',order:4}
+      },
+      members:{},memberCount:0,permanent:true
+    });
+  }
+}
+
+/* ================================================================
+   BOOT
+================================================================ */
+async function boot(){
+  await ensureHomeServer();
+  const shown=await checkInviteOrNitro();
+  if(shown)return;
+  const sess=localStorage.getItem('ak47_session');
+  if(sess){
+    try{
+      CU=JSON.parse(sess);
+      // refresh nitro status
+      const ud=await fbGet(`users/${CU.username.toLowerCase()}`);
+      if(ud){CU.nitro=ud.nitro||false;CU.status=ud.status||'online';CU.statusMsg=ud.statusMsg||'';CU.servers=ud.servers||[HOME_SERVER];}
+      if(!CU.servers.includes(HOME_SERVER))CU.servers.unshift(HOME_SERVER);
+      localStorage.setItem('ak47_session',JSON.stringify(CU));
+      launchApp();
+    }catch(e){localStorage.removeItem('ak47_session')}
+  }
+}
+window.addEventListener('beforeunload',()=>{if(CU)fbDel(`presence/${CU.username}`)});
+boot();
+</script>
 </body>
 </html>
