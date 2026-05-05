@@ -1,0 +1,10 @@
+{
+  "name": "botnest",
+  "version": "1.0.0",
+  "description": "BotNest — Hébergement de bots Discord",
+  "dependencies": {
+    "@netlify/functions": "^2.0.0",
+    "cookie": "^0.6.0",
+    "iron-session": "^8.0.0"
+  }
+}
